@@ -1,0 +1,88 @@
+package com.project.videoStreaming.Users.Service;
+
+import java.util.Optional;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.stereotype.Service;
+
+import com.project.videoStreaming.Users.DTO.User;
+import com.project.videoStreaming.Users.Entity.UserEntity;
+import com.project.videoStreaming.Users.Repository.UserRepository;
+
+
+@Service
+public class UserServiceImplementation implements UserService{
+
+    @Autowired
+    UserRepository Repository;
+
+    @Autowired
+    PasswordEncoder encoder;
+
+    @Override
+    public void userRegistration(User user) {
+        
+        try {
+            UserEntity entity = new UserEntity();
+            entity.setUsername(user.getUsername());
+            entity.setFirstname(user.getFirstname());
+            entity.setLastname(user.getLastname());
+            entity.setEmail(user.getEmail());
+            entity.setPassword(user.getPassword());
+            entity.setBirthdate(user.getBirthdate());
+            Repository.save(entity);
+        }catch(Exception e){
+            e.printStackTrace();
+        }
+    }
+
+    @Override
+    public User getUserDetails(String email){
+        Optional <UserEntity> getUserDetails = Repository.findByEmail(email);
+        User user = new User();
+        if(getUserDetails.isPresent()){
+            UserEntity entity = getUserDetails.get();
+            user.setEmail(entity.getEmail());
+            user.setUsername(entity.getUsername());
+            user.setFirstname(entity.getFirstname());
+            user.setLastname(entity.getLastname());
+        }
+        return user;
+    }
+    
+    @Override
+    public void updateUserDetails(User user) {
+        Optional<UserEntity> optionalEntity = Repository.findByEmail(user.getEmail());
+        if (optionalEntity.isPresent()) {
+            UserEntity entity = optionalEntity.get();
+            if (user.getUsername() != null) entity.setUsername(user.getUsername());
+            if (user.getFirstname() != null) entity.setFirstname(user.getFirstname());
+            if (user.getLastname() != null) entity.setLastname(user.getLastname());
+            //if (user.getPassword() != null) entity.setPassword(user.getPassword());
+            if (user.getBirthdate() != null) entity.setBirthdate(user.getBirthdate());
+            // if (user.getUserstatus() != null) entity.setUserstatus(user.getUserstatus());
+            Repository.save(entity);
+        } else {
+        }
+    }
+
+    @Override
+    public void deleteUser(String email, String password) {
+        Optional <UserEntity> getUser = Repository.findByEmail(email);
+    
+        if(getUser.isPresent()){
+            UserEntity user = getUser.get();
+            
+            if(encoder.matches(password, user.getPassword())){
+                Repository.deleteById(user.getUserId());
+            }else{
+                throw new IllegalArgumentException ("Invalid password");
+            }
+        }else{
+            throw new IllegalArgumentException("User Not Found.");
+        }
+    }
+
+   
+}

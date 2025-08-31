@@ -1,0 +1,33 @@
+.sideBar {
+  border-bottom: 1.5px solid rgb(171,175,175);
+  border-right: 1.5px solid rgb(171,175,175);
+  height:  calc(100vh - 50px); 
+  width: 10rem;
+  border-radius:0 0 0.5rem;
+  background-color:white;
+  position: absolute;
+  z-index: 1;
+}
+.general{
+  margin-bottom:1rem;
+}
+.list{
+  border-radius: 0.3rem;
+  cursor: pointer;
+  border: 1px solid rgb(171,175,175);
+  font-weight: 600;
+}
+.list:hover{
+  background-color: rgb(223,223,223);
+}
+li{
+  margin: 0.5rem 0;
+  padding:0.5rem 0rem  0.5rem 1rem;
+  font-size: 0.7rem;
+}
+
+@media (max-width: 500px){
+  .sideBar{
+    width:50%;
+  }
+}
