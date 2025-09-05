@@ -1,7 +1,5 @@
 import React, { useEffect, useState } from 'react'
 import './mainSection.css'
-import thumbnail from './assets/M5.jpg'
-import { VideoPage } from './Product Page/VideoPage'
 import { useNavigate } from 'react-router-dom'
 
 async function getData(type, value){
@@ -9,9 +7,9 @@ async function getData(type, value){
 
     let res;
 
-    const YourVideos = 'http://127.0.0.1:8080/video/me'
-    const randomVideos = 'http://127.0.0.1:8080/video/random-videos'
-    const category = `http://127.0.0.1:8080/video/category/${value}`
+    const YourVideos = 'http://localhost:8080/video/me'
+    const randomVideos = 'http://localhost:8080/video/random-videos'
+    const category = `http://localhost:8080/video/category/${value}`
     const wishlist = 'http://localhost:8080/wishlist/videos'
 
     try{
@@ -32,7 +30,8 @@ async function getData(type, value){
             }
                 break;
         }
-         return await res.json();
+        console.log(res.status)
+        return await res.json();
 
     }catch (error){
         console.error("Fetch error:", error);
@@ -41,14 +40,19 @@ async function getData(type, value){
     
 }
 
-function CardContainer({title, thumbnail}){
+function CardContainer({title, thumbnail, category, caption}){
     return(
-         <div className="card">
-            <img src={thumbnail} alt='thumbnail' />
-            <div className="card-body">
-                <h5 className="card-title">{title}</h5>
-            </div>
-        </div>
+    <div className="product-card">
+		<div className="badge material-symbols-outlined">bookmark</div>
+		<div className="product-tumb">
+			<img src={thumbnail} alt="picture" />
+		</div>
+		<div className="product-details">
+			<span className="product-catagory">{category}</span>
+			<h4>{title}</h4>
+			<p>{caption}</p>
+		</div>
+	</div>
     )
 }
 
@@ -70,12 +74,13 @@ export const MainSection = ({type, value}) => {
   return (
     <div className='main-section'>
         <div className='container-box'>
-            {videos.map((video, idx) => (
+            {videos.map((video, id) => (
                 <CardContainer 
-                    key={video.videoid || idx}
+                    key={video.videoid || id}
                     title={video.title}
-                    thumbnail={video.thumbnail || thumbnail}
-                    videoid={video.videoid} 
+                    thumbnail={video.thumbnail}
+                    caption={video.caption || "caption"}
+                    category={video.category || "category"} 
                     onClick={() =>{handleNavigation(video.videoid)}}
                 />
             ))}        

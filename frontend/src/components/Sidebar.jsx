@@ -1,19 +1,14 @@
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 import './sideBar.css'
 import { MainSection } from '../MainSection'
 import { useNavigate } from 'react-router-dom'
+import { AuthProvider, useAuth } from '../AuthLogin'
 
 
 export const SideBar = ({ setMainType, setValue }) => {
     const navigate = useNavigate();
+    const {isLoggedIn} = useAuth();
 
-    const checkAuthAndNavigate = (callback) => {
-      if (!authUser) {
-        navigate('/login');
-      } else {
-        callback();
-      }
-    };
 
   return (
     <div className='sideBar p-2'>
@@ -23,20 +18,20 @@ export const SideBar = ({ setMainType, setValue }) => {
           Home
         </div>
 
-        <div className='flex items-center p-1.5 list general' onClick={() => checkAuthAndNavigate(() => setMainType("me"))} style={{fontSize:'0.8rem'}}>
+        <div className='flex items-center p-1.5 list general' onClick={() => {if(isLoggedIn){setMainType("me")}}} style={{fontSize:'0.8rem'}}>
           <span className='material-symbols-outlined pr-2.5'>smart_display</span> 
           Your Videos
         </div> 
 
         <div className='flex items-center p-1.5 list general'
-          onClick={() => checkAuthAndNavigate(() => setMainType("wishlist"))}
+          onClick={() => {if(isLoggedIn){setMainType("wishlist")}}}
           style={{ fontSize: '0.9rem' }}>
           <span className='material-symbols-outlined pr-2.5'>bookmark</span>
           Wishlist
         </div>  
         
         <div className='flex items-center p-1.5 list general'
-          onClick={() => checkAuthAndNavigate(() => navigate('/UploadVideo'))}
+          onClick={() => {if(isLoggedIn){navigate("/UploadVideo")}}}
           style={{ fontSize: '0.75rem' }}>
           <span className='material-symbols-outlined pr-2.5'>add_circle</span>
           Upload Video

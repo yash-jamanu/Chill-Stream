@@ -38,7 +38,7 @@ public class VideoController {
     }
 
     //Get videos uploaded by other users.
-    @GetMapping("/{channelid}")
+    @GetMapping("/user/{channelid}")
     public List<Video> getVideosByChannelID(@PathVariable UUID channelID) {  
 
         return implementation.getVideosByUserID(channelID);

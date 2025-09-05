@@ -3,13 +3,12 @@ package com.project.videoStreaming.Users.Controller;
 // import java.lang.Math;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.project.videoStreaming.SecurityConfig.AuthService;
 import com.project.videoStreaming.Users.DTO.User;
 import com.project.videoStreaming.Users.Service.UserServiceImplementation;
 
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -23,12 +22,13 @@ public class UserDetailsController {
     @Autowired
     UserServiceImplementation Service;
 
+    @Autowired
+    AuthService auth;
 
     @GetMapping("/details")
     public User getUserDetails() {
-        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-        String email = auth.getName();
-        return Service.getUserDetails(email);
+        User user =  Service.getUserDetails(auth.getUserId());
+        return user;
     }
     
 
@@ -43,13 +43,5 @@ public class UserDetailsController {
         String password = request.getPassword();
         Service.deleteUser(email, password);
     }
-
-   
-
- 
-
-
-    
-
     
 }

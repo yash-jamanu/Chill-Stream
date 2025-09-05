@@ -56,8 +56,10 @@ function VideoDetails({ onBack, onNext, close, details, setDetails }) {
         <input type="text" name="title" placeholder="Title" value={details.title || ''} onChange={handleChange} />
         <textarea name="description" placeholder="Description" value={details.description || ''} onChange={handleChange} />
         <div>
-          <input type="radio" name="status" value="Private" checked={details.status === 'Private'} onChange={handleChange} /> Private
-          <input type="radio" name="status" value="Public" checked={details.status === 'Public'} onChange={handleChange} /> Public
+          <select className="form-select form-select-lg mb-3" aria-label="Large select example" name='status' value={details.status || "private"} onChange={handleChange} required>
+            <option value="private">Private</option>
+            <option value="public">Public</option>
+          </select>  
         </div>
         <button type="submit">Next</button>
       </form>
@@ -149,7 +151,7 @@ async function createVideo({videoURL, data, thumbnail}){
       },
       body: JSON.stringify(payload)
     })
-    
+    console.log(res.status)
     if (!res.ok) {
       throw new Error(`HTTP error! status: ${res.status}`);
     }

@@ -1,8 +1,8 @@
 import React from 'react'
 import './Navbar.css'
-import profile from "../assets/profile.png"
 import { useNavigate } from 'react-router-dom'
 import { useState, useEffect } from 'react';
+import { AuthProvider, useAuth } from '../AuthLogin';
 
 function LeftNavbar ({isSideBarOpen, toggleSideBar}){
   return(
@@ -20,72 +20,81 @@ function LeftNavbar ({isSideBarOpen, toggleSideBar}){
 
 function InputSearch(){
   return(
-    <form className='flex items-center'>
+    <form className='flex items-center' onSubmit={(e) =>{e.preventDefault()}}>
       <input type='search' placeholder='Search' name='search' className='search pl-1.5'/>
-      <button className='searchButton material-symbols-outlined cursor-pointer'>search</button>
+      <button className='searchButton material-symbols-outlined cursor-pointer'type="submit">search</button>
     </form>
   )
 }
 
-// function RightNavbar({UserDetails, onProfileClick}){
-//   return (
-//     <div className='rightNavbar display'>
-//       <InputSearch />
-//       <div className='display ml-3 cursor-pointer' onClick={onProfileClick}>
-//         {UserDetails?.profile ? (
-//           <img
-//             src={UserDetails.profile}
-//             style={{ width: '1.5rem' }}
-//             alt='Profile'
-//           />
-//         ) : (
-//           <span className='material-symbols-outlined profile' style={{ fontSize: '1.5rem' }}>
-//             person
-//           </span>
-//         )}
-//       </div>
-//     </div>
-//   )
-// }
+function RightNavbar({onProfileClick}){
 
-export const Navbar = ({isSideBarOpen, toggleSideBar}) => {
-  // const [authUser, setAuthUser] = useState({})
+  const {isLoggedIn} = useAuth();
+  const [data, setdata] = useState({})
+  const navigate = useNavigate();
 
-  // useEffect(() => {
-  //   getUser().then((data) => {
-  //     setAuthUser(data);
-  //   });
-  // }, []);
+  useEffect(()=>{
+    const fetchDetails = async () => {
+      if (isLoggedIn) {
+        const user = await getUserDetails();
+        setdata(user);
+      }
+      fetchDetails();
+    };
+  },[isLoggedIn])
 
-  // const handleProfileClick = () => {
-  //   if (!authUser) {
-  //     navigate('/login');
-  //   } else {
-  //     navigate('/Profile', { state: { authUser } });
-  //   }
-  // };
+  const handleProfileClick = () =>{
+    if(isLoggedIn){
+      navigate("/Profile");
+    }else{
+      navigate("/Login")
+    }
+  }
 
+  return (
+    <div className='rightNavbar display'>
+      <InputSearch />
+      <div className='display ml-3 cursor-pointer' onClick={handleProfileClick}>
+        {data?.profile ? (
+          <img
+            src={data.profile}
+            style={{ width: '1.5rem' }}
+            alt='Profile'
+          />
+        ) : (
+          <span className='material-symbols-outlined profile' style={{ fontSize: '1.5rem' }}>
+            person
+          </span>
+        )}
+      </div>
+    </div>
+  )
+}
+
+export const Navbar = ({isSideBarOpen, toggleSideBar}) => {  
   return (
     <nav className=' navbar'>
         <LeftNavbar isSideBarOpen={isSideBarOpen} toggleSideBar={toggleSideBar}/>
-        {/* <RightNavbar UserDetails={authUser} onProfileClick={handleProfileClick}/> */}
+        <RightNavbar onProfileClick={handleProfileClick}/> 
     </nav>
   )
 }
 
-
-// async function getUser () {
-//   try{
-//     const res = await fetch("http://localhost:8080/user/details",{
-//       method: 'POST',
-//       credentials: 'include'
-//     })
-//     if (res.status === 401 || res.status === 403) { 
-//       return null;
-//     }
-//     return await res.json();
-//   }catch(error){
-//     console.error("Error",  error);
-//     return null;
-//   }
-// }
+async function getUserDetails(){
+  try{
+    const res = await fetch("http://localhost:8080/user/details",
+      {
+        credentials:"include"
+      }
+    )
+    if(res.ok){
+      return await res.json();
+    }else{
+      console.error("Failed to fetch user details:", res.status);
+      return {};
+    }
+  }catch(err){
+    console.error("Error fetching user details:", err);
+    return {};
+  }
+}

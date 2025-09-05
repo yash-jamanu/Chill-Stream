@@ -1,16 +1,17 @@
 import React from 'react'
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-
+import { AuthProvider, useAuth } from '../AuthLogin';
+ 
 export const LoginForm = () => {
     const navigate = useNavigate();
     const [error, setError] = useState('');
+    const { setIsLoggedIn } = useAuth();
 
     const [data, setData] = useState({
     email :'',
     password : ''
     })
-
     const handleData = (e) => {
         const { name, value } = e.target;
         setData((prev) => ({
@@ -30,9 +31,10 @@ export const LoginForm = () => {
             body: JSON.stringify(data),
             credentials: "include" // ✅ ensures cookies/session are sent
           });
-        
+          console.log(res.status)
           if (res.ok) {
             navigate("/");
+            setIsLoggedIn(true);
           } else if (res.status === 401) {
             setError("Invalid email or password");
           } else {
@@ -49,12 +51,10 @@ export const LoginForm = () => {
         <form onSubmit={handleSubmit}>
           {error && <div className="alert alert-danger">{error}</div>}
             <div className="mb-3">
-              <label htmlFor="email" className="form-label">Email address</label>
-              <input type="email" className="form-control" id="email" name='email' value={data.email} onChange={handleData} required/>
+              <input type="email" className="form-control" id="email" name='email' value={data.email} onChange={handleData} autoComplete="off" placeholder='Email Address' required/>
             </div>
             <div className="mb-3">
-              <label htmlFor="password" className="form-label">Password</label>
-              <input type="password" className="form-control" id="password" name='password' value={data.password} onChange={handleData} required/>
+              <input type="password" className="form-control" id="password" name='password' value={data.password} onChange={handleData} autoComplete='off' placeholder='Password' required/>
             </div>
           <button type="submit" className="btn btn-primary">Submit</button>
         </form>

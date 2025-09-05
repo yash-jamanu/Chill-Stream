@@ -39,7 +39,7 @@ export const Profile = ({UserDetails}) => {
             headers: {
               "Content-Type": "application/x-www-form-urlencoded"
             }});
-
+            console.log(response.status)
             if(response.ok){
                 console.log(response.status);
             }

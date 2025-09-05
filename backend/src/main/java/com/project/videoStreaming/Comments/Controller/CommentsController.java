@@ -33,19 +33,19 @@ public class CommentsController {
         return Service.getComments(videoid);
     }
     
-    @PostMapping("/comment")
+    @PostMapping("/user/comment")
     public void addComments(@RequestBody Comments comment) {
         comment.setUserid(auth.getUserId());
         Service.addComment(comment);
     }
     
-    @PostMapping("/update")
+    @PostMapping("/user/update")
     public void updateComment (@RequestBody Comments comment){
         comment.setUserid(auth.getUserId());
         Service.updateComment(comment);
     }
 
-    @DeleteMapping("/{commentid}/{videoid}")
+    @DeleteMapping("/user/{commentid}/{videoid}")
     public void deleteComment(@PathVariable UUID commentid, @PathVariable UUID videoid){
         Service.deleteComment(commentid, auth.getUserId(), videoid);
     }

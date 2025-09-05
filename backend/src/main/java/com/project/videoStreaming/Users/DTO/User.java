@@ -13,7 +13,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 public class User {
-    private UUID userid;
+    private UUID userId;
     private String username;
     private String firstname;
     private String lastname;

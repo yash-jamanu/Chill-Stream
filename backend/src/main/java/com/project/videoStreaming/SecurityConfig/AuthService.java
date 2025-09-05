@@ -7,6 +7,7 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
+import com.project.videoStreaming.Users.Entity.UserEntity;
 import com.project.videoStreaming.Users.Repository.UserRepository;
 
 @Service
@@ -17,8 +18,9 @@ public class AuthService {
 
     public UUID getUserId(){
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-        UUID getUserid = repo.findUserIdByEmail(auth.getName());
-        return getUserid; 
+        return repo.findByEmail(auth.getName())
+               .map(UserEntity::getUserId)
+               .orElseThrow(() -> new RuntimeException("User not found"));
     }
 
 }

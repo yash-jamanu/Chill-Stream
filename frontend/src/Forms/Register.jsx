@@ -29,7 +29,7 @@ export const Register = () => {
       credentials: "include",
       body: JSON.stringify(data)
     })
-
+    console.log(res.status)
     if(res.ok){
       console.log(data);
         navigate("/OTP")

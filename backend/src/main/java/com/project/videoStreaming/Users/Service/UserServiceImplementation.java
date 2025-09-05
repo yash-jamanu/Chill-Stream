@@ -1,6 +1,7 @@
 package com.project.videoStreaming.Users.Service;
 
 import java.util.Optional;
+import java.util.UUID;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -38,8 +39,8 @@ public class UserServiceImplementation implements UserService{
     }
 
     @Override
-    public User getUserDetails(String email){
-        Optional <UserEntity> getUserDetails = Repository.findByEmail(email);
+    public User getUserDetails(UUID UserId){
+        Optional <UserEntity> getUserDetails = Repository.findByUserId(UserId);
         User user = new User();
         if(getUserDetails.isPresent()){
             UserEntity entity = getUserDetails.get();
@@ -53,7 +54,7 @@ public class UserServiceImplementation implements UserService{
     
     @Override
     public void updateUserDetails(User user) {
-        Optional<UserEntity> optionalEntity = Repository.findByEmail(user.getEmail());
+        Optional<UserEntity> optionalEntity = Repository.findByUserId(user.getUserId());
         if (optionalEntity.isPresent()) {
             UserEntity entity = optionalEntity.get();
             if (user.getUsername() != null) entity.setUsername(user.getUsername());
