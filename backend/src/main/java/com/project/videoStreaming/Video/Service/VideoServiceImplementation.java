@@ -20,6 +20,24 @@ public class VideoServiceImplementation implements VideoService {
     VideoRepository Repository;
 
     @Override
+    public List<Video> searchVideos(String searchText){
+
+        List<VideoEntity> getVideos =  Repository.findVideosBySearchText(searchText);
+
+        List <Video> listOfVideos = new ArrayList<>();
+        
+        if(!getVideos.isEmpty()){
+            for(VideoEntity entity : getVideos ){
+                Video video = new Video();
+                BeanUtils.copyProperties(entity, video);
+                listOfVideos.add(video);
+            }
+        }
+
+        return listOfVideos;
+    }
+
+    @Override
     public void createVideo(Video video) {
         try {
             VideoEntity entity = new VideoEntity();
@@ -31,7 +49,7 @@ public class VideoServiceImplementation implements VideoService {
             entity.setDescription(video.getDescription());
             entity.setCategory(video.getCategory());
             entity.setVideostatus(video.getVideostatus());
-
+            System.out.println(entity);
             Repository.save(entity);
         }catch(Exception e){
             e.printStackTrace();

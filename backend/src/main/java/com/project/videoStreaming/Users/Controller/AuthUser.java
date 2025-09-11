@@ -116,12 +116,9 @@ public class AuthUser {
     private void validateOtpAndSaveUser(@PathVariable int OTP, HttpSession session, HttpServletRequest request){
 
         Integer getSavedOTP = (Integer) session.getAttribute("OTP");
-        System.out.println(getSavedOTP);
         User getSavedUser = (User) session.getAttribute("pendingUser");
-        System.out.println(getSavedUser);
         if(getSavedOTP == null || getSavedUser == null || !getSavedOTP.equals(OTP)){
         }else{
-            System.out.println(getSavedUser+ "success");
             Service.userRegistration(getSavedUser);
             session.removeAttribute("OTP");
             session.removeAttribute("pendingUser");

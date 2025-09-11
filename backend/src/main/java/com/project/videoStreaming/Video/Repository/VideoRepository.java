@@ -3,6 +3,8 @@ package com.project.videoStreaming.Video.Repository;
 import java.util.UUID;
 
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 import com.project.videoStreaming.Video.Entity.VideoEntity;
@@ -22,4 +24,10 @@ public interface VideoRepository extends JpaRepository<VideoEntity, UUID> {
     Optional <VideoEntity> findByUserIdAndVideoId(UUID userid, UUID videoid);
 
     Optional <VideoEntity> findByVideoId (UUID videoid);
+
+    @Query("SELECT a FROM VideoEntity a WHERE " +
+            "LOWER(a.title) LIKE LOWER(CONCAT('%', :searchText, '%')) OR " +
+            "LOWER(a.caption) LIKE LOWER(CONCAT('%', :searchText, '%')) OR " +
+            "LOWER(a.category) LIKE LOWER(CONCAT('%', :searchText, '%'))")
+    List <VideoEntity> findVideosBySearchText(@Param("searchText") String searchText);
 }

@@ -1,10 +1,9 @@
 .sideBar {
-  border-bottom: 1.5px solid rgb(171,175,175);
-  border-right: 1.5px solid rgb(171,175,175);
-  height:  calc(100vh - 50px); 
-  width: 10rem;
+  height:  calc(100vh - 60px); 
+  width: 12rem;
   border-radius:0 0 0.5rem;
-  background-color:white;
+  border-top: 1px solid var(--optionalColor);
+  background-color: var(--secondaryColor);
   position: absolute;
   z-index: 1;
 }
@@ -14,11 +13,12 @@
 .list{
   border-radius: 0.3rem;
   cursor: pointer;
-  border: 1px solid rgb(171,175,175);
   font-weight: 600;
+  font-size: 0.8rem;
+  background-color: var(--optionalColor);
 }
 .list:hover{
-  background-color: rgb(223,223,223);
+  background-color: var(--mainColor);
 }
 li{
   margin: 0.5rem 0;

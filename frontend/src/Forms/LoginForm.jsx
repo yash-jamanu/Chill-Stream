@@ -46,6 +46,10 @@ export const LoginForm = () => {
         }
     }
 
+    const navigateToRegisteration =() =>{
+      navigate("/Register")
+    }
+
   return (
     <>
         <form onSubmit={handleSubmit}>
@@ -58,6 +62,7 @@ export const LoginForm = () => {
             </div>
           <button type="submit" className="btn btn-primary">Submit</button>
         </form>
+        <p onClick={navigateToRegisteration} className='cursor-pointer'>Register me!</p>
     </>
   )
 }

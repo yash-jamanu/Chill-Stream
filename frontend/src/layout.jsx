@@ -2,7 +2,7 @@ import React, { useState } from 'react'
 import { SideBar } from './components/Sidebar'
 import { Navbar } from './components/Navbar'
 
-export const Layout = ({setMainType, setValue}) => {
+export const Layout = ({searchText, setMainType, setValue}) => {
     const [isSideBarOpen, setSideBarOpen] = useState(false);
 
     const toggleSideBar = () =>{
@@ -10,7 +10,7 @@ export const Layout = ({setMainType, setValue}) => {
     }
   return (
   <>
-    <Navbar isSideBarOpen={isSideBarOpen} toggleSideBar={toggleSideBar} />
+    <Navbar onSearch={searchText} isSideBarOpen={isSideBarOpen} toggleSideBar={toggleSideBar} />
     {isSideBarOpen && <SideBar setMainType={setMainType} setValue={setValue}/>}
   </>
   )

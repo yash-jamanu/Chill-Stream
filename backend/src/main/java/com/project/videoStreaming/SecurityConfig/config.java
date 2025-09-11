@@ -33,13 +33,13 @@ public class config {
     public SecurityFilterChain securityFilterChain(HttpSecurity httpSecurity) throws Exception{
 
         return httpSecurity
-                        .csrf(Customizer-> Customizer.disable())
+                        .csrf(Customizer -> Customizer.disable())        
                         .cors(cors -> cors.configurationSource(corsConfigurationSource()))
                         .authorizeHttpRequests(auth -> auth
                                 .requestMatchers("/api/auth/**").permitAll()
                                 .requestMatchers("/video/user/*", "/video/random-videos", "/video/category/*").permitAll()
                                 .requestMatchers("/comments/*").permitAll()
-                                .requestMatchers("/api/auth/status").permitAll()
+                                .requestMatchers("/api/auth/status", "/search").permitAll()
                                 .anyRequest().authenticated())
                         .sessionManagement(session -> session
                                 .sessionCreationPolicy(SessionCreationPolicy.IF_REQUIRED))

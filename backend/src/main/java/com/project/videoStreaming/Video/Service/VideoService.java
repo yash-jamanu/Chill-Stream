@@ -6,6 +6,9 @@ import java.util.UUID;
 import com.project.videoStreaming.Video.DTO.Video;
 
 public interface VideoService {
+
+    List<Video> searchVideos(String searchText);
+    
     public void createVideo(Video video);
 
     public List<Video> getVideosByUserID(UUID userid); // videos uploaded by you and other users.

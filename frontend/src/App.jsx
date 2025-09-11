@@ -16,14 +16,15 @@ import { AuthProvider } from './AuthLogin'
 function App() {
   const [type, setMainType] = useState('')
   const [value, setValue] = useState('')
+  const [searchText, setSearchText] = useState("")
   
   return (
     <>
       <AuthProvider>
         <Router>
-          <Layout setMainType={setMainType} setValue={setValue}/>
+          <Layout searchText={setSearchText} setMainType={setMainType} setValue={setValue}/>
           <Routes>
-            <Route path="/" element={<Home setMainType={type} setValue={value}/>} />
+            <Route path="/" element={<Home searchText={searchText} setMainType={type} setValue={value}/>} />
             <Route path="/UploadVideo" element={<UploadVideo />} />
             <Route path='/video-player' element = {<VideoPage />} />
             <Route path='/Profile' element = {<Profile />} />

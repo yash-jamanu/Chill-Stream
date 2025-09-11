@@ -2,6 +2,13 @@
 *{
   font-family: "Inter", sans-serif;
   font-optical-sizing: auto;
-  font-weight: 600;
   font-style: normal;
+  color: #4B2E1E;
+  box-sizing: border-box;
+}
+:root{
+  --mainColor : #F5E1C0;
+  --secondaryColor : #E27C3E;
+  --fontColor : #4B2E1E;
+  --optionalColor : #FFF8ED;
 }

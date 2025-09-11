@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react'
 import './mainSection.css'
 import { useNavigate } from 'react-router-dom'
 
-async function getData(type, value){
+async function getData(text, type, value){
     let data = type;
 
     let res;
@@ -11,31 +11,38 @@ async function getData(type, value){
     const randomVideos = 'http://localhost:8080/video/random-videos'
     const category = `http://localhost:8080/video/category/${value}`
     const wishlist = 'http://localhost:8080/wishlist/videos'
+    const searchedText = `http://localhost:8080/search?searchText=${text}`
 
-    try{
-        switch(data){
-            case "me": {
-                res = await fetch(YourVideos);
-                break;
-            }
-            case "category": {
-                res = await fetch(category);
-                break;
-            }
-            case "wishlist" : {
-                res = await fetch(wishlist);
-            }
-            default: {
-                res = await fetch(randomVideos);
-            }
-                break;
-        }
-        console.log(res.status)
+    if (text && text.trim() !== "") {
+        res = await fetch(searchedText, { method: "GET" });
         return await res.json();
+    }else{
+        try{
+            switch(data){
+                case "me": {
+                    res = await fetch(YourVideos);
+                    break;
+                }
+                case "category": {
+                    res = await fetch(category);
+                    break;
+                }
+                case "wishlist" : {
+                    res = await fetch(wishlist);
+                    break;
+                }
+                default: {
+                    res = await fetch(randomVideos);
+                }
+                    break;
+            }
+            console.log(res.status)
+            return await res.json();
 
-    }catch (error){
-        console.error("Fetch error:", error);
-        return [];
+        }catch (error){
+            console.error("Fetch error:", error);
+            return [];
+        }
     }
     
 }
@@ -56,15 +63,15 @@ function CardContainer({title, thumbnail, category, caption}){
     )
 }
 
-export const MainSection = ({type, value}) => {
+export const MainSection = ({searchText, type, value}) => {
     const [videos, setVideos] = useState([])
 
     useEffect(() => {
         
-        getData(type, value).then(data => {
+        getData(searchText, type, value).then(data => {
             setVideos(data);
         });
-    }, [type, value]);
+    }, [searchText, type, value]);
 
     const navigate = useNavigate();
 
@@ -76,7 +83,7 @@ export const MainSection = ({type, value}) => {
         <div className='container-box'>
             {videos.map((video, id) => (
                 <CardContainer 
-                    key={video.videoid || id}
+                    key={video.videoid}
                     title={video.title}
                     thumbnail={video.thumbnail}
                     caption={video.caption || "caption"}

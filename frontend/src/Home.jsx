@@ -1,11 +1,11 @@
 import React, { useState } from 'react'
 import { MainSection } from './MainSection'
 
-export const Home = ({setMainType, setValue} ) => { 
+export const Home = ({searchText, setMainType, setValue} ) => { 
 
   return (
     <>
-    <MainSection type={setMainType} value={setValue}/>
+    <MainSection searchText={searchText} type={setMainType} value={setValue}/>
     </>
   )
 }

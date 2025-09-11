@@ -57,6 +57,7 @@ public class VideoController {
 
     @PostMapping("/create")
     public void createVideo(@RequestBody Video video) {
+        System.out.println(video);
         UUID userid = auth.getUserId();
         video.setUserId(userid);
         implementation.createVideo(video);

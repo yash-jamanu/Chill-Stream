@@ -1,5 +1,7 @@
 import React from 'react'
 import './Navbar.css'
+import '../index.css'
+import LOGO  from '../assets/LOGO.png'
 import { useNavigate } from 'react-router-dom'
 import { useState, useEffect } from 'react';
 import { AuthProvider, useAuth } from '../AuthLogin';
@@ -9,25 +11,41 @@ function LeftNavbar ({isSideBarOpen, toggleSideBar}){
     <div className='leftNavbar display'>
       <span
         className='material-symbols-outlined cursor-pointer toggleSidebarButton'
-        onClick={toggleSideBar}
+        onClick={toggleSideBar} 
+        style={{fontSize:"2rem"}}
       >
         {isSideBarOpen ? 'close' : 'menu'}
       </span>
-      <h2 style={{ fontSize: '1.5rem', textAlign: 'center' }}>Navbar</h2>
+      <img src={LOGO}  className='logo'/>
     </div>
   )
 }
 
-function InputSearch(){
+export function searchText (){
+  let text;
+  return text;
+}
+
+function InputSearch({onSearch}){
+  const [text, setText] = useState("");
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    onSearch(text);  
+  };
+   
+
   return(
-    <form className='flex items-center' onSubmit={(e) =>{e.preventDefault()}}>
-      <input type='search' placeholder='Search' name='search' className='search pl-1.5'/>
-      <button className='searchButton material-symbols-outlined cursor-pointer'type="submit">search</button>
-    </form>
+    <>
+      <form className="flex" role="search" onSubmit={handleSubmit}>
+        <input className="search" type="search" placeholder="Search" aria-label="Search" onChange={(e)=>{setText(e.target.value)}}/>
+        <button className="material-symbols-outlined search-button display" type="submit">Search</button>
+      </form>
+    </>
   )
 }
 
-function RightNavbar({onProfileClick}){
+function RightNavbar({onSearch}){
 
   const {isLoggedIn} = useAuth();
   const [data, setdata] = useState({})
@@ -39,13 +57,13 @@ function RightNavbar({onProfileClick}){
         const user = await getUserDetails();
         setdata(user);
       }
-      fetchDetails();
     };
+    fetchDetails();
   },[isLoggedIn])
 
   const handleProfileClick = () =>{
     if(isLoggedIn){
-      navigate("/Profile");
+      navigate("/Profile", {state:{userData:data}});
     }else{
       navigate("/Login")
     }
@@ -53,16 +71,16 @@ function RightNavbar({onProfileClick}){
 
   return (
     <div className='rightNavbar display'>
-      <InputSearch />
+      <InputSearch onSearch={onSearch}/>
       <div className='display ml-3 cursor-pointer' onClick={handleProfileClick}>
         {data?.profile ? (
           <img
             src={data.profile}
-            style={{ width: '1.5rem' }}
+            style={{ width: '2rem' }}
             alt='Profile'
           />
         ) : (
-          <span className='material-symbols-outlined profile' style={{ fontSize: '1.5rem' }}>
+          <span className='material-symbols-outlined profile' style={{ fontSize: '2rem'}}>
             person
           </span>
         )}
@@ -71,11 +89,11 @@ function RightNavbar({onProfileClick}){
   )
 }
 
-export const Navbar = ({isSideBarOpen, toggleSideBar}) => {  
+export const Navbar = ({onSearch, isSideBarOpen, toggleSideBar}) => {  
   return (
     <nav className=' navbar'>
         <LeftNavbar isSideBarOpen={isSideBarOpen} toggleSideBar={toggleSideBar}/>
-        <RightNavbar onProfileClick={handleProfileClick}/> 
+        <RightNavbar onSearch={onSearch}/> 
     </nav>
   )
 }
@@ -88,7 +106,9 @@ async function getUserDetails(){
       }
     )
     if(res.ok){
-      return await res.json();
+      const data = await res.json();
+      console.log(data, res.status);
+      return data;
     }else{
       console.error("Failed to fetch user details:", res.status);
       return {};
@@ -96,5 +116,21 @@ async function getUserDetails(){
   }catch(err){
     console.error("Error fetching user details:", err);
     return {};
+  }
+}
+
+async function searchByText({text}){
+  const searchText = text
+  try{
+    const res = await fetch(`http://localhost:8080/search/${searchText}`)
+    
+    if(res.ok){
+      return res.json();
+    }else{
+      console.log(res.status)
+    }
+  }catch(error){
+    console.error(error);
+    
   }
 }
