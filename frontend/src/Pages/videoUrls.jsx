@@ -11,8 +11,8 @@ export function Video({ onNext , close, setVideoURL}) {
     const [isProcessing, setIsProcessing] = useState(false);
 
     if(fileStatus){
-        document.getElementById("select-file").style.display="none"
-        document.getElementById("upload-file").style.display="inline"
+      document.getElementById("select-file").style.display="none"
+      document.getElementById("upload-file").style.display="inline"
     }
 
     const uploadVideo = async (e) => {
@@ -23,8 +23,8 @@ export function Video({ onNext , close, setVideoURL}) {
       const uploadTask = uploadBytesResumable(storageRef, file);
 
       uploadTask.on('state_changed', null,
-          console.log("video Uploading"),
-         async () => {
+        console.log("video Uploading"),
+        async () => {
         const downloadURL = await getDownloadURL(uploadTask.snapshot.ref);
         setVideoURL(downloadURL);
         alert('Video uploaded!');

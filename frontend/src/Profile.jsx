@@ -29,11 +29,15 @@ function ProfileDetails(){
         }
     }
 
+    const handleProfileEdit = () =>{
+        navigate ("/EditProfile", {state:{userDetails:userData}})
+    }
+
     return(
         <div className='main'>
             <div className='profile-block '>
                 <div className='edit-block'>
-                    <button className='edit-button material-symbols-outlined'>edit</button>
+                    <button className='edit-button material-symbols-outlined' onClick={handleProfileEdit}>edit</button>
                 </div>
 
                 <div className='profile-img-block '>

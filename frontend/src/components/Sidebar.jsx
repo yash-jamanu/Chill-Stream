@@ -19,19 +19,37 @@ export const SideBar = ({ setMainType, setValue }) => {
           Home
         </div>
 
-        <div className='flex items-center p-1.5 list general' onClick={() => {if(isLoggedIn){setMainType("me")}}}>
+        <div className='flex items-center p-1.5 list general' 
+          onClick={() => {
+            if(isLoggedIn){
+              setMainType("me")
+            }else{
+              navigate("/Login")
+            }
+            }}>
           <span className='material-symbols-outlined pr-2.5'>smart_display</span> 
           Your Videos
         </div> 
 
         <div className='flex items-center p-1.5 list general'
-          onClick={() => {if(isLoggedIn){setMainType("wishlist")}}}>
+          onClick={() => {
+            if(isLoggedIn){
+              setMainType("wishlist")
+            }else{
+              navigate('/Login')
+            }
+            }}>
           <span className='material-symbols-outlined pr-2.5'>bookmark</span>
           Wishlist
         </div>  
         
         <div className='flex items-center p-1.5 list general'
-          onClick={() => {if(isLoggedIn){navigate("/UploadVideo")}}}>
+          onClick={() => {
+            if(isLoggedIn){
+              navigate("/UploadVideo")
+            }else{
+              navigate('/Login')
+            }}}>
           <span className='material-symbols-outlined pr-2.5'>add_circle</span>
           Upload Video
         </div>
@@ -41,8 +59,8 @@ export const SideBar = ({ setMainType, setValue }) => {
         <p className='font-medium text-2xl' style={{color: "black"}}>Explore</p>
         <div>
           <ul className='flex-col items-center'>
-            <li className='list' onClick={() => { setMainType("category"); setValue("Adventure"); }}>Adventure</li>
-            <li className='list' onClick={() => { setMainType("category"); setValue("Drama"); }}>Drama</li>
+            <li className='list' onClick={() => { setMainType("category"); setValue("Gaming"); }}>Gaming</li>
+            <li className='list' onClick={() => { setMainType("category"); setValue("Sports"); }}>Sports</li>
             <li className='list' onClick={() => { setMainType("category"); setValue("Sci-fi"); }}>Sci-fi</li>
             <li className='list' onClick={() => { setMainType("category"); setValue("Romance"); }}>Romance</li>
           </ul>

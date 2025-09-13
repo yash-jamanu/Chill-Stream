@@ -49,15 +49,12 @@ async function getData(text, type, value){
 
 function CardContainer({title, thumbnail, category, caption}){
     return(
-    <div className="product-card">
-		<div className="badge material-symbols-outlined">bookmark</div>
-		<div className="product-tumb">
-			<img src={thumbnail} alt="picture" />
-		</div>
-		<div className="product-details">
-			<span className="product-catagory">{category}</span>
-			<h4>{title}</h4>
-			<p>{caption}</p>
+    <div className="card">
+			<img src={thumbnail} alt="picture" className='card-img'/>
+		<div className="card-details">
+			<span className="card-category"># {category}</span>
+			<h4 className='card-title'>{title}</h4>
+			<p className='card-caption'>{caption}</p>
 		</div>
 	</div>
     )
@@ -66,8 +63,7 @@ function CardContainer({title, thumbnail, category, caption}){
 export const MainSection = ({searchText, type, value}) => {
     const [videos, setVideos] = useState([])
 
-    useEffect(() => {
-        
+    useEffect(() => {  
         getData(searchText, type, value).then(data => {
             setVideos(data);
         });
