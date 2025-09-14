@@ -1,0 +1,15 @@
+.Form{
+    width: 20rem;
+    margin: 1rem auto;
+    color:var(--fontColor);
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+
+.FormSubmit-btn{
+    background-color: var(--secondaryColor);
+    color: var(--optionalColor);
+    border-radius: 5px;
+    padding: 0.2rem;
+}
