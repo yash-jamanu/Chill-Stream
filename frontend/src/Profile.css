@@ -1,10 +1,11 @@
 .main{
     width: 100%;
     max-width: 100dvw;
-    height: calc(100dvh - 50px);
+    height: calc(100dvh - 60px);
     display: flex;
     align-items: center;
     justify-content: center;
+    background-color: var(--mainColor);
 }
 
 .profile-block {
@@ -14,7 +15,8 @@
     flex-direction: column;
     align-items: center;
     padding: 2rem 1.5rem 1.5rem 1.5rem;
-    border: 2px solid #e0e7ef;
+    color: var(--fontColor);
+    background-color: var(--optionalColor);
     background: linear-gradient(135deg, #f8fafc 80%, #e0e7ef 100%);
     box-shadow: 0 4px 24px 0 rgba(0,0,0,0.07), 0 1.5px 4px 0 rgba(0,0,0,0.03);
     position: relative;
@@ -27,8 +29,8 @@
 }
 
 .edit-button {
-    background: #56b85b;
-    color: white;
+    background: var(--secondaryColor);
+    color: var(--fontColor);
     border-radius: 0.5rem;
     width: 2.2rem;
     height: 2.2rem;
@@ -56,7 +58,6 @@
     width: 100%;
     height: 100%;
     border-radius: 50%; 
-    border: 2px solid rgb(171, 170, 170);  
 }
 
 .profile-img{
@@ -117,8 +118,8 @@ p {
   box-shadow: none;
 }
 .profile-btn.primary {
-  background: #007bff;
-  color: #fff;
+  background: var(--secondaryColor);
+  color: var(--fontColor);
 }
 
 .profile-btn.primary:hover {

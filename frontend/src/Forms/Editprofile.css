@@ -11,3 +11,77 @@
   align-items: center;
   justify-content: center;
 }
+
+.userEdit-main{
+  background-color: var(--mainColor);
+  width: 100dvw;
+  height: calc(100dvh - 60px);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.editProfile-block{
+  width : 20rem;
+  border-radius:10px;
+  background-color: var(--optionalColor);
+}
+
+.image-block{
+  padding: 1rem;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+
+.editProfile-img{
+  margin-bottom: 0.5rem; 
+  width: 10rem;
+  height: 10rem;
+}
+
+.edit-icon{
+  cursor: pointer;
+  text-align: center;
+  padding:  0.5rem 1rem;
+  font-size: 1.2rem;
+  background-color: var(--secondaryColor);
+  color: var(--fontColor);
+  border-radius: 5px;
+}
+
+.editDetails-form{
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.editDetails-input{
+  color: var(--fontColor);
+  border: 2px solid var(--fontColor);
+  font-size: 1rem;
+  font-weight: 500;
+  border-radius: 5px;
+  width: 15rem;
+  padding: 0.2rem;
+}
+
+.editDetails-input:focus{
+  outline: none;
+}
+
+.submit-btn{
+  background-color: var(--secondaryColor);
+  color: var(--fontColor);
+  padding: 0.5rem 1rem;
+  font-size: 1rem; 
+  font-weight: 600;
+  border-radius: 5px;
+  margin: 0 0 10px 0;
+}
+.submit-btn:focus{
+  outline: none;
+}

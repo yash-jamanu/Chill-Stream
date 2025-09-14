@@ -1,6 +1,7 @@
 import React from 'react'
 import { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
+import './form.css'
 
 export const Register = () => {
     const navigate = useNavigate();
@@ -38,33 +39,29 @@ export const Register = () => {
 
   return (
     <>
-        <form onSubmit={handleSubmit}>
+        <form onSubmit={handleSubmit} className='Form'>
+            <h2 className='my-3'>Register</h2>
             <div className="mb-3">
-              <label htmlFor="username" className="form-label">Username</label>
-              <input type="text" className="form-control" id="username" name='username' value={data.username}  onChange={handleData} autoComplete="off" required/>
+              <input type="text" className="form-control" id="username" name='username' value={data.username} placeholder='Username' onChange={handleData} autoComplete="off" required/>
             </div>
             <div className="mb-3">
-              <label htmlFor="firstname" className="form-label">Firstname</label>
-              <input type="text" className="form-control" id="firstname" name='firstname' value={data.firstname} onChange={handleData}  required/>
+              <input type="text" className="form-control" id="firstname" name='firstname' placeholder='Firstname' value={data.firstname} onChange={handleData}  required/>
             </div>
             <div className="mb-3">
-              <label htmlFor="lastname" className="form-label">Lastname</label>
-              <input type="text" className="form-control" id="lastname" name='lastname' value={data.lastname} onChange={handleData} required/>
+              <input type="text" className="form-control" id="lastname" name='lastname' placeholder='Lastname' value={data.lastname} onChange={handleData} required/>
             </div>
             <div className="mb-3">
-              <label htmlFor="email" className="form-label">Email</label>
-              <input type="email" className="form-control" id="email" name='email' value={data.email} onChange={handleData} autoComplete="off" required/>
+              <input type="email" className="form-control" id="email" name='email' placeholder='Email' value={data.email} onChange={handleData} autoComplete="off" required/>
             </div>
             <div className="mb-3">
-              <label htmlFor="password" className="form-label">Password</label>
-              <input type="text" className="form-control" id="password" name='password' value={data.password} onChange={handleData} required/>
+              <input type="text" className="form-control" id="password" name='password' placeholder='Password' value={data.password} onChange={handleData} required/>
             </div>
             <div className="mb-3">
               <label htmlFor="birthdate" className="form-label">Birthdate</label>
               <input type="date" className="form-control" id="birthdate" name='birthdate' value={data.birthdate} onChange={handleData} required/>
             </div>
             
-            <button type="submit" className="btn btn-primary">Submit</button>
+            <button type="submit" className="FormSubmit-btn">Submit</button>
         </form>
     </>
   )

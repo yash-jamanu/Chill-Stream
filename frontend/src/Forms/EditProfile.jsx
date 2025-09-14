@@ -41,29 +41,28 @@ function EditProfilePic ({oldProfilePic, setProfilePic}){
 
 
     return(
-        <div>
+        <div className='image-block'>
             {isProcessing && (
                 <div className="processing-video">
                     <p className="text-2xl font-bold">Wait until profile is Uploading...</p>
                 </div>
             )}
 
-            <div>
-                <img src= { oldProfilePic || profile }  alt='Profile-pic'/>
-                <span className='material-symbols-outlined'
-                    onClick={() => fileInputRef.current.click()}
-                >
-                    edit
-                </span>
-                
-                <input type="file" accept="image/*" 
-                    ref={fileInputRef} 
-                    style={{ display: 'none' }} 
-                    onChange={(e) => {
-                        setFile(e.target.files[0])
-                        setFileStatus(true)
-                    }}
-                />    
+            <img src= { oldProfilePic || profile }  className='editProfile-img' alt='Profile-pic'/>
+            
+            <input type="file" accept="image/*" 
+                ref={fileInputRef} 
+                style={{ display: 'none' }} 
+                onChange={(e) => {
+                    setFile(e.target.files[0])
+                    setFileStatus(true)
+                }}
+            />    
+
+            <div className='material-symbols-outlined edit-icon'
+                onClick={() => fileInputRef.current.click()}
+            >
+                edit
             </div>
         </div>
     )
@@ -85,26 +84,31 @@ function EditDetails ({oldUserDetails, setNewUserData, onSubmit}){
 
     return(
         <div>
-            <form onSubmit={onSubmit}>
-                <input type="text" name="username" 
-                    value={OldData.username}
+            <form onSubmit={onSubmit} className='editDetails-form'>
+                <input type="text" name="username"
+                    placeholder='Username'
+                    className='editDetails-input' 
                     onChange={handleChange} 
                 />
 
                 <input type='text' name='firstname'
-                    value={OldData.firstname}
+                    placeholder='Firstname'
+                    className='editDetails-input'
                     onChange={handleChange}
                 />
 
                 <input type='text' name='lastname'
-                    value={OldData.lastname}
+                    placeholder='Lastname'
+                    className='editDetails-input'
                     onChange={handleChange}
                 />
 
                 <input type='date' name='birthdate'
-                    value={OldData.birthdate}
+                    className='editDetails-input'
                     onChange={handleChange}
                 />
+
+                <button type="submit" className='submit-btn'>Submit</button>
             </form>
         </div>
     )
@@ -128,10 +132,21 @@ export const EditProfile = () => {
     }
 
     return (    
-        <>
-            <EditProfilePic oldProfilePic={userData?.profile} setProfilePic={setProfilePic}/>
-            <EditDetails oldUserDetails={userData} setNewUserData={setNewUserData} onSubmit={handleUpdate}/>
-        </>
+        <div className='userEdit-main'>
+            <div className='editProfile-block'>
+                <EditProfilePic 
+                    oldProfilePic={userData?.profile} 
+                    setProfilePic={setProfilePic}
+                />
+
+                <EditDetails 
+                    oldUserDetails={userData} 
+                    setNewUserData={setNewUserData} 
+                    onSubmit={handleUpdate}
+                />
+            </div>
+                
+        </div>
     )
 }
 

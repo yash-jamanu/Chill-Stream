@@ -19,6 +19,7 @@ function ProfileDetails(){
 
             if(response.ok){
                 navigate("/")
+                localStorage.removeItem("userID");
                 setIsLoggedIn(false)
                 console.log(response.status);
             }else{
@@ -42,7 +43,6 @@ function ProfileDetails(){
 
                 <div className='profile-img-block '>
                     <div className='img-block '>
-                        
                         <img src={userData?.profile || profile} className='profile-img' alt='profile-img'/>
                     </div>
                 </div> 
@@ -67,4 +67,3 @@ export const Profile = () => {
     </div>
   )
 }
-

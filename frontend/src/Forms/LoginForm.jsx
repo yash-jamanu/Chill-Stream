@@ -2,6 +2,7 @@ import React from 'react'
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { AuthProvider, useAuth } from '../AuthLogin';
+import "./form.css"
  
 export const LoginForm = () => {
     const navigate = useNavigate();
@@ -52,17 +53,18 @@ export const LoginForm = () => {
 
   return (
     <>
-        <form onSubmit={handleSubmit}>
+        <form onSubmit={handleSubmit} className='Form'>
           {error && <div className="alert alert-danger">{error}</div>}
+          <h2 className='my-3'>Login</h2>
             <div className="mb-3">
               <input type="email" className="form-control" id="email" name='email' value={data.email} onChange={handleData} autoComplete="off" placeholder='Email Address' required/>
             </div>
             <div className="mb-3">
               <input type="password" className="form-control" id="password" name='password' value={data.password} onChange={handleData} autoComplete='off' placeholder='Password' required/>
             </div>
-          <button type="submit" className="btn btn-primary">Submit</button>
+          <button type="submit" className="FormSubmit-btn cursor-pointer">Submit</button>
+          <p onClick={navigateToRegisteration} className='cursor-pointer'>Register me!</p>
         </form>
-        <p onClick={navigateToRegisteration} className='cursor-pointer'>Register me!</p>
     </>
   )
 }

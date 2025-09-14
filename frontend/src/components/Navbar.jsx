@@ -8,7 +8,7 @@ import { AuthProvider, useAuth } from '../AuthLogin';
 
 function LeftNavbar ({isSideBarOpen, toggleSideBar}){
   return(
-    <div className='leftNavbar display'>
+    <div className='leftNavbar text-center display'>
       <span
         className='material-symbols-outlined cursor-pointer toggleSidebarButton'
         onClick={toggleSideBar} 
@@ -109,6 +109,7 @@ async function getUserDetails(){
       const data = await res.json();
       console.log(data, res.status);
       return data;
+      localStorage.setItem("userID", data.userid);
     }else{
       console.error("Failed to fetch user details:", res.status);
       return {};
@@ -130,7 +131,6 @@ async function searchByText({text}){
       console.log(res.status)
     }
   }catch(error){
-    console.error(error);
-    
+    console.error(error);  
   }
 }

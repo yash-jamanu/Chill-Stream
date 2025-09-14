@@ -24,13 +24,13 @@ export const OTP = () => {
 
   return (
   <>
-    <form className="row g-3" onSubmit={handleSubmit}>
+    <form className="row g-3 Form" onSubmit={handleSubmit}>
         <div className="col-auto">
           <label htmlFor="OTP" className="visually-hidden">OTP</label>
           <input type="text" className="form-control" id="OTP" name='OTP' value={OTP} onChange={handleData} required/>
         </div>
         <div className="col-auto">
-          <button type="submit" className="btn btn-primary mb-3">Verify OTP</button>
+          <button type="submit" className="FormSubmit-btn mb-3">Verify OTP</button>
         </div>
     </form>
   </>
