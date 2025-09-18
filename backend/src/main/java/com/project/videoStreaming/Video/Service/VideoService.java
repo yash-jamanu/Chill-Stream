@@ -7,6 +7,8 @@ import com.project.videoStreaming.Video.DTO.Video;
 
 public interface VideoService {
 
+    Video getVideoByVideoId(UUID videoId);
+
     List<Video> searchVideos(String searchText);
     
     public void createVideo(Video video);

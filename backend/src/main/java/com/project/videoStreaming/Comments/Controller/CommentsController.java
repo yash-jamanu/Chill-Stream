@@ -28,7 +28,7 @@ public class CommentsController {
     @Autowired
     AuthService auth;
 
-    @GetMapping("/{videoid}")
+    @GetMapping("/Video/{videoid}")
     public List<Comments> getComments(@PathVariable UUID videoid) {
         return Service.getComments(videoid);
     }

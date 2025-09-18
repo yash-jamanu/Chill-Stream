@@ -12,3 +12,6 @@
   --fontColor : #4B2E1E;
   --optionalColor : #FFF8ED;
 }
+body{
+  background-color: var(--mainColor);
+}

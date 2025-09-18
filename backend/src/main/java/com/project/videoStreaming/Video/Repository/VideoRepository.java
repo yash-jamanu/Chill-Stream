@@ -17,7 +17,8 @@ import java.util.Optional;
 public interface VideoRepository extends JpaRepository<VideoEntity, UUID> {
     Optional<VideoEntity> findByTitle(String title);
 
-    List<VideoEntity> findByCategory(String category);
+    @Query("SELECT a FROM VideoEntity a WHERE " + "LOWER(a.category) LIKE LOWER(CONCAT('%', :category, '%'))")
+    List<VideoEntity> findByCategory(@Param("category") String category);
 
     List<VideoEntity> findByUserId(UUID userid);
 

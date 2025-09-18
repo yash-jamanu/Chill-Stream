@@ -20,6 +20,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 
 
+
 @RestController
 @RequestMapping("/video")
 public class VideoController {
@@ -29,6 +30,12 @@ public class VideoController {
 
     @Autowired
     AuthService auth;
+
+    @GetMapping("/{videoId}")
+    public Video getVideoDetailsByID(@PathVariable UUID videoId) {
+        return implementation.getVideoByVideoId(videoId);
+    }
+    
 
     // Get videos uploaded by you.
     @GetMapping("/my-videos")
@@ -52,7 +59,7 @@ public class VideoController {
 
     @GetMapping("/category/{value}")
     public List<Video> getVideosByCategory(@PathVariable String value){
-        return implementation.getRandomVideos();
+        return implementation.getVideosByCategory(value);
     }
 
     @PostMapping("/create")
@@ -63,12 +70,12 @@ public class VideoController {
         implementation.createVideo(video);
     }
 
-    @PutMapping("/user/update/{videoid}")
+    @PutMapping("/update/{videoid}")
     public void updateVideo(@RequestBody Video video, @PathVariable UUID videoid){
         implementation.updateVideoUsingUserIDAndVideoID(video, auth.getUserId(), videoid);
     }
 
-    @DeleteMapping("/delete/user/video/{videoid}")
+    @DeleteMapping("/delete/{videoid}")
     public void deleteVideo(@PathVariable UUID videoid){
         implementation.deleteVideo(auth.getUserId(), videoid);
     }    

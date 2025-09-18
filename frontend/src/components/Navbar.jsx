@@ -108,8 +108,8 @@ async function getUserDetails(){
     if(res.ok){
       const data = await res.json();
       console.log(data, res.status);
+      localStorage.setItem("userID", data.userId);
       return data;
-      localStorage.setItem("userID", data.userid);
     }else{
       console.error("Failed to fetch user details:", res.status);
       return {};

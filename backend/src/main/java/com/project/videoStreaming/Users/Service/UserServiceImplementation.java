@@ -44,12 +44,29 @@ public class UserServiceImplementation implements UserService{
         User user = new User();
         if(getUserDetails.isPresent()){
             UserEntity entity = getUserDetails.get();
+            user.setUserId(entity.getUserId());
             user.setEmail(entity.getEmail());
             user.setUsername(entity.getUsername());
             user.setFirstname(entity.getFirstname());
             user.setLastname(entity.getLastname());
         }
         return user;
+    }
+
+    @Override
+    public User getChannelDetails (UUID userId){
+        Optional <UserEntity> getChannel = Repository.findByUserId(userId);
+
+        User channel = new User();
+        if(getChannel.isPresent()){
+            UserEntity entity = getChannel.get();
+            channel.setUsername(entity.getUsername());
+            channel.setFirstname(entity.getFirstname());
+            channel.setLastname(entity.getLastname());
+            channel.setProfile(entity.getProfile());
+            channel.setSubs_count(entity.getSubs_count());
+        }
+        return channel;
     }
     
     @Override

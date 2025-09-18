@@ -8,6 +8,7 @@ import { LoginForm } from './Forms/LoginForm'
 import { Register } from './Forms/register'
 import { OTP } from './Forms/OTP'
 import { EditProfile } from './Forms/EditProfile'
+import { UpdateVideo } from './Pages/UpdateVideo'
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import './App.css'
 import { AuthProvider } from './AuthLogin'
@@ -33,6 +34,7 @@ function App() {
             <Route path='/Register' element = {<Register />} />
             <Route path='/OTP' element = {<OTP />} />
             <Route path='/EditProfile' element ={<EditProfile />} />
+            <Route path='/UpdateVideo' element ={<UpdateVideo />} />
           </Routes>
         </Router>
       </AuthProvider>  

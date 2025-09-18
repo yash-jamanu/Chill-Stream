@@ -1,20 +1,27 @@
 import React from 'react'
+import { useLocation } from 'react-router-dom';
 import './VideoPage.css'
 import { useParams } from 'react-router-dom';
-import { VideoPlayer } from './VideoPlayer';
-import { VideoDetails } from './VideoDetails';
-import { VideoComments } from './VideoComments';
+import  VideoPlayer  from './VideoPlayer';
+import  VideoDetailsPage  from './VideoDetailsPage';
+import  VideoComments  from './VideoComments';
 
 
 export const VideoPage = () => {
-    const { videoid } = useParams();
+    const location = useLocation();
+    const {VideoDetails} = location.state || {}
+
+     if (!VideoDetails) {
+        return <div className="error">No video details provided</div>;
+    }
+
     return (
       <>
-          <div className='main-content'>
-              <VideoPlayer videoid={videoid}/>
-              <VideoDetails videoId={videoid}/>
-              <VideoComments videoId={videoid}/>
-          </div>
+        <div className='main-content'>
+            <VideoPlayer filepath={VideoDetails.filepath}/>
+            <VideoDetailsPage VideoDetails={VideoDetails}/> 
+            <VideoComments VideoId={VideoDetails.videoId}/>
+        </div>
       </>
     )
 }

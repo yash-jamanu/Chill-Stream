@@ -20,6 +20,18 @@ public class VideoServiceImplementation implements VideoService {
     VideoRepository Repository;
 
     @Override
+    public Video getVideoByVideoId(UUID videoId){
+       Optional <VideoEntity> getVideo = Repository.findByVideoId(videoId);
+
+       Video video = new Video(); 
+       if(getVideo.isPresent()){
+        BeanUtils.copyProperties(getVideo, video);
+       }
+
+       return video;
+    }
+
+    @Override
     public List<Video> searchVideos(String searchText){
 
         List<VideoEntity> getVideos =  Repository.findVideosBySearchText(searchText);

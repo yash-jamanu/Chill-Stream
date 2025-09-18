@@ -11,6 +11,8 @@ public interface UserService {
 
     public User getUserDetails(UUID UserId);
 
+    public User getChannelDetails(UUID userId);
+
     public void updateUserDetails(User user);
 
     public void deleteUser(String email, String password);

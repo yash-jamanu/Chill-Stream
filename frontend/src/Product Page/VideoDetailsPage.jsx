@@ -1,25 +1,14 @@
 import React, { useEffect, useState } from 'react'
+import profile from '../assets/profile.png'
 import './VideoPage.css'
 
-export const VideoDetails = ({videoId}) => {
+export default VideoDetailsPage
 
-    const [videoData, setVideoData] = useState(null);
+function VideoDetailsPage  ({VideoDetails})  {
 
-    //get videoData like title, caption, description
-    useEffect(() => {
-        const fetchData = async () => {
-            const data = await getVideoData(videoId); 
-            setVideoData(data);
-        };
-        fetchData();
-    }, [videoId]);
-
-
-    //like
-    const [like , setLike] = useState(0)
+    const [like , setLike] = useState(VideoDetails?.likecount || 0)
 
     const PrintLike = () =>{
-        let setLike = videoData.likecount; 
 
         let formattedLikes;
 
@@ -51,7 +40,7 @@ export const VideoDetails = ({videoId}) => {
         }
 
         const data = {
-            videoId: videoId
+            videoId: VideoDetails.videoId
         };
 
         try {
@@ -70,14 +59,15 @@ export const VideoDetails = ({videoId}) => {
     const handleDisLike = async (e) => {
         e.preventDefault();
 
-         if (isLiked) {
+        if (isLiked) {
             setLike(like - 1);
-            setIsLiked(true);
-            setIsDisliked(false); 
-        }   
+            setIsLiked(false);
+            setIsDisliked(true);
+        }
+ 
         
         const data = {
-            videoId: videoId
+            videoId: VideoDetails.videoId
         };
 
         try {
@@ -104,19 +94,28 @@ export const VideoDetails = ({videoId}) => {
     const [userData, setUserData] = useState(null);
 
     useEffect(() => {
-        if (!videoData) return;
+        if (!VideoDetails) return;
+        let userId = VideoDetails.userId
         const fetchData = async () => {
-            const data = await getUserData(videoData.userid);
+            const res = await fetch(`http://127.0.0.1:8080/user/channel/${userId}`,{
+                method : "GET"
+            });
+            const data = await res.json();
             setUserData(data);
         };
         fetchData();
-    }, [videoData]);
+    }, [VideoDetails]);
 
     //Followers
     const [followers, setFollowers] = useState(0)
 
+    useEffect(() => {
+        if (userData) {
+          setFollowers(userData.subs_count || 0);
+        }
+    }, [userData]);
+
     const follower = () =>{
-        let setFollowers = userData.subs_count; 
 
         let formattedFollowers;
 
@@ -137,14 +136,14 @@ export const VideoDetails = ({videoId}) => {
   return (
     <div className='details-block'>
         <div className='save-video material-symbols-outlined'>bookmark</div>
-        <h1 className='video-title'>{videoData ? (videoData.title) : "Title"}</h1>
-        <p className='video-category'># {videoData ? (videoData.category) : "Category"}</p>
-        <h5 className='caption'>{videoData ? (caption) : "Caption"}</h5>
+        <h1 className='video-title'>{VideoDetails ? (VideoDetails.title) : "Title"}</h1>
+        <p className='video-category'># {VideoDetails ? (VideoDetails.category) : "Category"}</p>
+        <h5 className='caption'>{VideoDetails ? (VideoDetails.caption) : "Caption"}</h5>
                 
         <div className='like-dislike-container'>
             <div onClick={handleLike}>
                 <span className={`material-symbols-outlined ${isLiked ? 'Fill' : ''}`} >thumb_up</span>
-                <span>{PrintLike}</span>
+                <span>{PrintLike()}</span>
             </div>
             <div onClick={handleDisLike}>
                 <span className={`material-symbols-outlined ${isDisliked ? 'Fill' : ''}`}>thumb_down</span>
@@ -153,10 +152,10 @@ export const VideoDetails = ({videoId}) => {
                 
         <div className='channel-details'>
             <div className='flex'>
-                <img src={userData.profile} alt='profile' className='profile-picture' />
+                <img src={userData?.profile || profile} alt='profile' className='profile-picture' />
                 <div>
                     <p className='channel-username'>{userData ? (userData.username) : "Username"}</p>
-                    <p className='channel-followers'>{follower} followers</p>
+                    <p className='channel-followers'>{follower()} followers</p>
                 </div>
             </div>
             <div className='text-center flex items-center'>
@@ -167,29 +166,8 @@ export const VideoDetails = ({videoId}) => {
         </div>
     
         <p className='description'>
-            {videoData ? (videoData.description) : "Description"}
+            {VideoDetails ? (VideoDetails.description) : "Description"}
         </p>
     </div>
   )
-}
-
-
-async function getVideoData(videoid) {
-    try {
-        const res = await fetch(`http://127.0.0.1:8080/video/${videoid}`);    
-        return await res.json();
-    } catch (error) {
-        console.error("Fetch error:", error);
-        return null;
-    }
-}
-
-async function getUserData(userid) {
-    try {
-        const res = await fetch(`http://127.0.0.1:8080/user/${userid}`);    
-        return await res.json();
-    } catch (error) {
-        console.error("Fetch error:", error);
-        return null;
-    }
 }

@@ -2,7 +2,9 @@ import React from 'react'
 import { useEffect, useState } from 'react'
 import './VideoPage.css'
 
-export const VideoComments = (VideoId) => {
+export default VideoComments
+
+function VideoComments  ({VideoId}) {
 
     const [comment, setComment] = useState('');
 
@@ -15,11 +17,12 @@ export const VideoComments = (VideoId) => {
         };
 
         try {
-            const res = await fetch('http://127.0.0.1:8080/comments/comment', {
+            const res = await fetch(`http://127.0.0.1:8080/comments/user/comment`, {
                 method: "POST",
                 headers: {
                     'Content-Type': 'application/json'
                 },
+                credentials:"include",
                 body: JSON.stringify(data)
             });
 
@@ -36,7 +39,7 @@ export const VideoComments = (VideoId) => {
         }
     };
 
-    //
+    
     const [commentData, setCommentData] = useState([]);
 
     useEffect(() => {
@@ -76,7 +79,9 @@ export const VideoComments = (VideoId) => {
 
 async function getCommentData(VideoId){
     try{
-        const res = await fetch(`http://localhost:8080/comments/${VideoId}`);
+        const res = await fetch(`http://localhost:8080/comments/Video/${VideoId}`,{
+            method:"GET"
+        });
         return res.json();
     }catch(error){
         console.error("Error", error);

@@ -38,7 +38,8 @@ public class config {
                         .authorizeHttpRequests(auth -> auth
                                 .requestMatchers("/api/auth/**").permitAll()
                                 .requestMatchers("/video/user/*", "/video/random-videos", "/video/category/*").permitAll()
-                                .requestMatchers("/comments/*").permitAll()
+                                .requestMatchers("/user/channel/*").permitAll()
+                                .requestMatchers("/comments/Video/*").permitAll()
                                 .requestMatchers("/api/auth/status", "/search").permitAll()
                                 .anyRequest().authenticated())
                         .sessionManagement(session -> session
