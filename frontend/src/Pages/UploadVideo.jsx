@@ -59,6 +59,16 @@ export const UploadVideo = () => {
 
 
 async function createVideo({videoURL, details, thumbnail}){
+  function getCookieValue(cookieName) {
+    const cookies = document.cookie.split('; ');
+    for (let cookie of cookies) {
+      const [name, value] = cookie.split('=');
+      if (name === cookieName) {
+        return decodeURIComponent(value);
+      }
+    }
+    return null; // Return null if the cookie is not found
+  }
   try{
     console.log(details)
     const payload = {
@@ -76,7 +86,8 @@ async function createVideo({videoURL, details, thumbnail}){
     const res = await fetch ('http://localhost:8080/video/create',{
       method : "POST",
       headers: {
-        'Content-Type': 'application/json'
+        'Content-Type': 'application/json',
+        "X-XSRF-TOKEN": getCookieValue("XSRF-TOKEN")
       },
       credentials:"include",
       body: JSON.stringify(payload)

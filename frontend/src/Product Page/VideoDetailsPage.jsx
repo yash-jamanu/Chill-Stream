@@ -8,6 +8,17 @@ function VideoDetailsPage  ({VideoDetails})  {
 
     const [like , setLike] = useState(VideoDetails?.likecount || 0)
 
+    function getCookieValue(cookieName) {
+      const cookies = document.cookie.split('; ');
+      for (let cookie of cookies) {
+        const [name, value] = cookie.split('=');
+        if (name === cookieName) {
+          return decodeURIComponent(value);
+        }
+      }
+      return null; // Return null if the cookie is not found
+    }
+
     const PrintLike = () =>{
 
         let formattedLikes;
@@ -43,11 +54,14 @@ function VideoDetailsPage  ({VideoDetails})  {
             videoId: VideoDetails.videoId
         };
 
+        
+
         try {
             const res = await fetch('http://127.0.0.1:8080/like', {
                 method: "POST",
                 headers: {
-                    'Content-Type': 'application/json'
+                    'Content-Type': 'application/json',
+                    "X-XSRF-TOKEN" : getCookieValue("XSRF-TOKEN")
                 },
                 body: JSON.stringify(data)
             });
@@ -64,7 +78,6 @@ function VideoDetailsPage  ({VideoDetails})  {
             setIsLiked(false);
             setIsDisliked(true);
         }
- 
         
         const data = {
             videoId: VideoDetails.videoId
@@ -74,7 +87,8 @@ function VideoDetailsPage  ({VideoDetails})  {
             const res = await fetch('http://127.0.0.1:8080/dislike', {
                 method: "POST",
                 headers: {
-                    'Content-Type': 'application/json'
+                    'Content-Type': 'application/json',
+                    "X-XSRF-TOKEN" : getCookieValue("XSRF-TOKEN")
                 },
                 body: JSON.stringify(data)
             });

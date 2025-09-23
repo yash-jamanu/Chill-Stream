@@ -24,16 +24,35 @@ export const Register = () => {
 
   const handleSubmit = async (e) =>{
     e.preventDefault();
-    const res = await fetch("http://localhost:8080/api/auth/register/request-OTP",{
-      method : "POST",
-      headers: { "Content-Type": "application/json" },
-      credentials: "include",
-      body: JSON.stringify(data)
-    })
-    console.log(res.status)
-    if(res.ok){
-      console.log(data);
-        navigate("/OTP")
+
+    function getCookieValue(cookieName) {
+      const cookies = document.cookie.split('; ');
+      for (let cookie of cookies) {
+        const [name, value] = cookie.split('=');
+        if (name === cookieName) {
+          return decodeURIComponent(value);
+        }
+      }
+      return null; // Return null if the cookie is not found
+    }
+
+    try{
+      const res = await fetch("http://localhost:8080/api/auth/register/request-OTP",{
+        method : "POST",
+        headers: { 
+          "Content-Type": "application/json", 
+          "X-XSRF-TOKEN": getCookieValue("XSRF-TOKEN")
+        },
+        credentials: "include",
+        body: JSON.stringify(data)
+      })
+      console.log(res.status)
+      if(res.ok){
+        console.log(data);
+          navigate("/OTP")
+      }
+    }catch(error){
+      console.error(error);
     }
   }
 

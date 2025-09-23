@@ -8,7 +8,8 @@ export const AuthProvider = ({ children }) => {
 
   useEffect(() => {
     fetch("http://localhost:8080/api/auth/status", {
-      credentials: "include"
+      credentials: "include",
+      method:"GET"
     })
       .then(res => res.json())
       .then(data => {

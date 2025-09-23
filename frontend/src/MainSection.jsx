@@ -28,7 +28,9 @@ async function getData(text, type, value){
                     break;
                 }
                 case "category": {
-                    res = await fetch(category);
+                    res = await fetch(category, {
+                      method:"GET"
+                    });
                     break;
                 }
                 case "wishlist" : {
@@ -120,10 +122,24 @@ function CardContainer({video, onClick}){
 }
 
 async function deleteVideo(videoId){
+  function getCookieValue(cookieName) {
+    const cookies = document.cookie.split('; ');
+    for (let cookie of cookies) {
+      const [name, value] = cookie.split('=');
+      if (name === cookieName) {
+        return decodeURIComponent(value);
+      }
+    }
+    return null; // Return null if the cookie is not found
+  }
+
   try{
     const res = await fetch (`http://localhost:8080/video/delete/${videoId}`,{
       method:"DELETE",
-      credentials:"include"
+      credentials:"include",
+      headers : {
+        "X-XSRF-TOKEN" : getCookieValue("XSRF-TOKEN")
+      }
     })
 
     if(res.ok){

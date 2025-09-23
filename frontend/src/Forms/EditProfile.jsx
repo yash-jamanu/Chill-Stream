@@ -153,6 +153,17 @@ export const EditProfile = () => {
 async function updateUser ({profilePic, newUserData}) {
     const navigate = useNavigate();
 
+    function getCookieValue(cookieName) {
+      const cookies = document.cookie.split('; ');
+      for (let cookie of cookies) {
+        const [name, value] = cookie.split('=');
+        if (name === cookieName) {
+          return decodeURIComponent(value);
+        }
+      }
+      return null; // Return null if the cookie is not found
+    }
+
     try {
         const data = {
             'profile' : profilePic,
@@ -165,7 +176,8 @@ async function updateUser ({profilePic, newUserData}) {
         const res = await fetch ("http://localhost:8080/user/update",{
             method : "PUT",
             headers: {
-              'Content-Type': 'application/json'
+              'Content-Type': 'application/json',
+              "X-XSRF-TOKEN": getCookieValue("XSRF-TOKEN")
             },
             credentials:"include",
             body: JSON.stringify(data)

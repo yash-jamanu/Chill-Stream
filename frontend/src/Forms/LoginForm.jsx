@@ -9,6 +9,7 @@ export const LoginForm = () => {
     const [error, setError] = useState('');
     const { setIsLoggedIn } = useAuth();
 
+
     const [data, setData] = useState({
     email :'',
     password : ''
@@ -25,12 +26,26 @@ export const LoginForm = () => {
         e.preventDefault(); 
         setError('');
 
+        function getCookieValue(cookieName) {
+          const cookies = document.cookie.split('; ');
+          for (let cookie of cookies) {
+            const [name, value] = cookie.split('=');
+            if (name === cookieName) {
+              return decodeURIComponent(value);
+            }
+          }
+          return null; // Return null if the cookie is not found
+        }
+
         try {
           const res = await fetch("http://localhost:8080/api/auth/login", {
             method: "POST",
-            headers: { "Content-Type": "application/json" },
+            headers: { 
+              "Content-Type": "application/json",
+              "X-XSRF-TOKEN" : getCookieValue("XSRF-TOKEN")
+             },
             body: JSON.stringify(data),
-            credentials: "include" // ✅ ensures cookies/session are sent
+            credentials: "include"
           });
           console.log(res.status)
           if (res.ok) {

@@ -10,10 +10,23 @@ export const OTP = () => {
     };
 
     const handleSubmit = async (e) =>{
+        function getCookieValue(cookieName) {
+          const cookies = document.cookie.split('; ');
+          for (let cookie of cookies) {
+            const [name, value] = cookie.split('=');
+            if (name === cookieName) {
+              return decodeURIComponent(value);
+            }
+          }
+          return null; // Return null if the cookie is not found
+        }
+
         e.preventDefault(); 
         const res = await fetch(`http://localhost:8080/api/auth/request-OTP/${OTP}`,{
           method : "POST",
-          headers: { "Content-Type": "application/json" },
+          headers: { 
+            "Content-Type": "application/json",
+            "X-XSRF-TOKEN": getCookieValue("XSRF-TOKEN") },
           credentials: "include"
         })
         console.log(res.status)
