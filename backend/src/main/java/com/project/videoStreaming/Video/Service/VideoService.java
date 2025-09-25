@@ -13,13 +13,19 @@ public interface VideoService {
     
     public void createVideo(Video video);
 
-    public List<Video> getVideosByUserID(UUID userid); // videos uploaded by you and other users.
+    public List<Video> getVideosByUserID(UUID userId); // videos uploaded by you and other users.
 
     public List<Video> getRandomVideos ();
 
     public List<Video> getVideosByCategory(String value);
 
-    public void updateVideoUsingUserIDAndVideoID(Video video, UUID userid, UUID videoid);
+    public void updateVideoUsingUserIDAndVideoID(Video video, UUID userId, UUID videoId);
 
-    public void deleteVideo(UUID userid, UUID videoid);
+    public void incrementLike (UUID videoId);
+    public void decrementLike (UUID videoId);
+
+    public void incrementDisLike (UUID videoId);
+    public void decrementDisLike (UUID videoId);
+
+    public void deleteVideo(UUID userid, UUID videoId);
 }

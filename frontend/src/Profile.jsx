@@ -2,7 +2,7 @@ import React from 'react'
 import './Profile.css'
 import profile from './assets/profile.png'
 import { useLocation, useNavigate } from 'react-router-dom'
-import { AuthProvider, useAuth } from './AuthLogin'
+import { useAuth } from './AuthLogin'
 
 function ProfileDetails(){
     const location = useLocation();

@@ -12,6 +12,8 @@ import java.util.Optional;
 @Repository
 public interface FollowerRepository extends JpaRepository<FollowersEntity, UUID>{
 
+    Optional<FollowersEntity> findTopByFollowersIdAndChannelIdOrderByFollowedAtDesc(UUID followersId, UUID channelId);
+
     boolean existsByChannelIdAndFollowersId(UUID channelId, UUID followersId);
 
     Optional <FollowersEntity> findByChannelIdAndFollowersId(UUID channel_id, UUID followersid);

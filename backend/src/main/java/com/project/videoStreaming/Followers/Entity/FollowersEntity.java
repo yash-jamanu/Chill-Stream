@@ -5,6 +5,8 @@ import jakarta.persistence.Id;
 import java.time.LocalDate;
 import java.util.UUID;
 
+import com.project.videoStreaming.Followers.DTO.followAction;
+
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -32,6 +34,9 @@ public class FollowersEntity {
     @Column(name = "channel_id")
     private UUID channelId;
 
+    @Column(name = "action")
+    private followAction action;
+
     @Column(name = "followed_at", insertable = false, updatable = false)
-    private LocalDate followed_at;
+    private LocalDate followedAt;
 }

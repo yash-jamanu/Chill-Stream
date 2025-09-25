@@ -1,4 +1,4 @@
-package com.project.videoStreaming.LikeAndDislike.DTO;
+package com.project.videoStreaming.VideoReaction.DTO;
 
 import java.sql.Timestamp;
 import java.util.UUID;
@@ -8,11 +8,12 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 @Data
-@AllArgsConstructor
 @NoArgsConstructor
-public class Like {
-    private UUID id;
+@AllArgsConstructor
+public class videoReaction {
+    private UUID Id;
     private UUID userId;
     private UUID videoId;
-    private Timestamp liked_at;
+    private reaction reactionType;
+    private Timestamp reacted_at;
 }

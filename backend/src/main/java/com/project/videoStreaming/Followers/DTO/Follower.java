@@ -14,5 +14,6 @@ public class Follower {
     private UUID Id;
     private UUID followersId;
     private UUID channelId;
+    private followAction action;
     private LocalDate followed_at;
 }

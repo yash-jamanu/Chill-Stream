@@ -52,22 +52,6 @@ public class UserServiceImplementation implements UserService{
         }
         return user;
     }
-
-    @Override
-    public User getChannelDetails (UUID userId){
-        Optional <UserEntity> getChannel = Repository.findByUserId(userId);
-
-        User channel = new User();
-        if(getChannel.isPresent()){
-            UserEntity entity = getChannel.get();
-            channel.setUsername(entity.getUsername());
-            channel.setFirstname(entity.getFirstname());
-            channel.setLastname(entity.getLastname());
-            channel.setProfile(entity.getProfile());
-            channel.setSubs_count(entity.getSubs_count());
-        }
-        return channel;
-    }
     
     @Override
     public void updateUserDetails(User user) {
@@ -103,4 +87,41 @@ public class UserServiceImplementation implements UserService{
     }
 
    
+
+    //channel
+    @Override
+    public User getChannelDetails (UUID userId){
+        Optional <UserEntity> getChannel = Repository.findByUserId(userId);
+
+        User channel = new User();
+        if(getChannel.isPresent()){
+            UserEntity entity = getChannel.get();
+            channel.setUsername(entity.getUsername());
+            channel.setFirstname(entity.getFirstname());
+            channel.setLastname(entity.getLastname());
+            channel.setProfile(entity.getProfile());
+            channel.setSubs_count(entity.getSubs_count());
+        }
+        return channel;
+    }
+
+    @Override
+    public void incrementSubsCount (UUID ChannelId){
+        Optional <UserEntity> getChannel = Repository.findByUserId(ChannelId);
+        if(getChannel.isPresent()){
+            UserEntity entity = getChannel.get();
+            entity.setSubs_count(entity.getSubs_count()+1);
+            Repository.save(entity);
+        }
+    }
+
+    @Override
+    public void decrementSubsCount (UUID ChannelId){
+        Optional <UserEntity> getChannel = Repository.findByUserId(ChannelId);
+        if(getChannel.isPresent()){
+            UserEntity entity = getChannel.get();
+            entity.setSubs_count(entity.getSubs_count()-1);
+            Repository.save(entity);
+        }
+    }
 }

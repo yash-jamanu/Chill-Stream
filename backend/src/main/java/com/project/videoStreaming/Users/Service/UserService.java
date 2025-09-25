@@ -11,6 +11,10 @@ public interface UserService {
 
     public User getUserDetails(UUID UserId);
 
+    public void incrementSubsCount (UUID ChannelId);
+
+    public void decrementSubsCount (UUID ChannelId);
+
     public User getChannelDetails(UUID userId);
 
     public void updateUserDetails(User user);

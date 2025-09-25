@@ -11,7 +11,10 @@ import java.util.UUID;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+
 
 
 @RestController
@@ -24,11 +27,15 @@ public class FollowersController {
     @Autowired
     AuthService auth;
 
-    @PostMapping("/follow-unfollow")
-    public void follower(@PathVariable UUID channelId) {
-        Follower follower = new Follower();
+    @GetMapping("/status/follow/{channelId}")
+    public Follower getFollwerStatus(@PathVariable UUID channelId) {
+        UUID followersId = auth.getUserId();
+        return Service.getfollowStatus(followersId, channelId);
+    }
+    
 
-        follower.setChannelId(channelId);
+    @PostMapping("/follow-unfollow")
+    public void follower(@RequestBody Follower follower) {
         follower.setFollowersId(auth.getUserId());
         Service.follower(follower);
     }

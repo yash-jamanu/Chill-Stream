@@ -138,6 +138,47 @@ public class VideoServiceImplementation implements VideoService {
     }
 
     @Override
+    public void incrementLike(UUID videoId){
+        Optional <VideoEntity> getVideo = Repository.findByVideoId(videoId);
+        if(getVideo.isPresent()){
+            VideoEntity video = getVideo.get();
+            video.setLikecount(video.getLikecount() + 1);
+            Repository.save(video);
+        }
+    }
+
+    @Override
+    public void decrementLike(UUID videoId){
+        Optional <VideoEntity> getVideo = Repository.findByVideoId(videoId);
+        if(getVideo.isPresent()){
+            VideoEntity video = getVideo.get();
+            video.setLikecount(video.getLikecount() - 1);
+            Repository.save(video);
+        }
+    }
+
+    @Override
+    public void incrementDisLike(UUID videoId){
+        Optional <VideoEntity> getVideo = Repository.findByVideoId(videoId);
+        if(getVideo.isPresent()){
+            VideoEntity video = getVideo.get();
+            video.setDislike(video.getDislike() + 1);
+            Repository.save(video);
+        }
+    }
+
+    @Override
+    public void decrementDisLike(UUID videoId){
+        Optional <VideoEntity> getVideo = Repository.findByVideoId(videoId);
+        if(getVideo.isPresent()){
+            VideoEntity video = getVideo.get();
+            video.setDislike(video.getDislike() - 1);
+            Repository.save(video);
+        }
+    }
+
+
+    @Override
     public void deleteVideo(UUID userid, UUID videoid) {
         Optional <VideoEntity> getVideo = Repository.findByUserIdAndVideoId(userid, videoid);
 

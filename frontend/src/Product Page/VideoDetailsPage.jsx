@@ -1,23 +1,17 @@
 import React, { useEffect, useState } from 'react'
 import profile from '../assets/profile.png'
 import './VideoPage.css'
+import { useAuth } from '../AuthLogin'
+import { Navigate, useNavigate } from 'react-router-dom'
 
 export default VideoDetailsPage
 
 function VideoDetailsPage  ({VideoDetails})  {
 
-    const [like , setLike] = useState(VideoDetails?.likecount || 0)
+    const { isLoggedIn } = useAuth();
+    const navigate = useNavigate();
 
-    function getCookieValue(cookieName) {
-      const cookies = document.cookie.split('; ');
-      for (let cookie of cookies) {
-        const [name, value] = cookie.split('=');
-        if (name === cookieName) {
-          return decodeURIComponent(value);
-        }
-      }
-      return null; // Return null if the cookie is not found
-    }
+    const like = VideoDetails?.likecount || 0;
 
     const PrintLike = () =>{
 
@@ -37,100 +31,61 @@ function VideoDetailsPage  ({VideoDetails})  {
         return formattedLikes;
     }
 
-    
     const [isLiked, setIsLiked] = useState(false)
-    const [isDisliked, setIsDisliked] = useState (false)
-    
-    const handleLike = async (e) => {
-        e.preventDefault();
+    const [isDisliked, setIsDisliked] = useState(false)
 
-        if (!isLiked) {
-            setLike(like + 1);
-            setIsLiked(true);
-            setIsDisliked(false); 
+    useEffect(()=>{
+        if (!isLoggedIn) return;
+        const fetchStatus = async () => {
+            const status = getReactionStatus({videoid:VideoDetails.videoId});
+            if(status == "LIKE"){
+                setIsLiked(true)
+            }else if(status == "DISLIKE"){
+                setIsDisliked(true)
+            }
         }
+        fetchStatus();
+    },[VideoDetails])
 
-        const data = {
-            videoId: VideoDetails.videoId
-        };
+    function handleReaction (type)  {
+      if (!isLoggedIn){
+        navigate("/Login")
+        return;
+      }
 
-        
-
-        try {
-            const res = await fetch('http://127.0.0.1:8080/like', {
-                method: "POST",
-                headers: {
-                    'Content-Type': 'application/json',
-                    "X-XSRF-TOKEN" : getCookieValue("XSRF-TOKEN")
-                },
-                body: JSON.stringify(data)
-            });
-        } catch (error) {
-            console.error("Error posting comment:", error);
-        }
-    }
-    
-    const handleDisLike = async (e) => {
-        e.preventDefault();
-
+      reaction({videoId: VideoDetails.videoId}, type);
+      if (type === "LIKE") {
         if (isLiked) {
-            setLike(like - 1);
-            setIsLiked(false);
-            setIsDisliked(true);
+          setIsLiked(false);
+        } else {
+          setIsLiked(true);
+          setIsDisliked(false);
         }
-        
-        const data = {
-            videoId: VideoDetails.videoId
-        };
-
-        try {
-            const res = await fetch('http://127.0.0.1:8080/dislike', {
-                method: "POST",
-                headers: {
-                    'Content-Type': 'application/json',
-                    "X-XSRF-TOKEN" : getCookieValue("XSRF-TOKEN")
-                },
-                body: JSON.stringify(data)
-            });
-        } catch (error) {
-            console.error("Error posting comment:", error);
+      } else if (type === "DISLIKE") {
+        if (isDisliked) {
+          setIsDisliked(false);
+        } else {
+          setIsDisliked(true);
+          setIsLiked(false);
         }
-    }
-
-    //Follow
-    const [followBtn, setFollowBtn] = useState(false)
-
-    const handleFollowBtn = () => {
-        setFollowBtn(prevState => !prevState);
+      }
     };
 
-    //user details
-    const [userData, setUserData] = useState(null);
-
-    useEffect(() => {
-        if (!VideoDetails) return;
-        let userId = VideoDetails.userId
-        const fetchData = async () => {
-            const res = await fetch(`http://127.0.0.1:8080/user/channel/${userId}`,{
-                method : "GET"
-            });
-            const data = await res.json();
-            setUserData(data);
-        };
-        fetchData();
-    }, [VideoDetails]);
-
-    //Followers
-    const [followers, setFollowers] = useState(0)
-
-    useEffect(() => {
-        if (userData) {
-          setFollowers(userData.subs_count || 0);
+    
+    const [channelData, setChannelData] = useState({})
+    
+    useEffect(()=>{
+        const fetchChannelData = async ()=>{
+            const data = await getChannelData({userId: VideoDetails.userId})
+            setChannelData(data)
         }
-    }, [userData]);
+        fetchChannelData();
+    },[VideoDetails])
+    
+
+    const followers = channelData.subs_count || 0;
 
     const follower = () =>{
-
         let formattedFollowers;
 
         switch (true) {
@@ -147,6 +102,35 @@ function VideoDetailsPage  ({VideoDetails})  {
         return formattedFollowers;
     }
 
+    const [isFollowed, setIsFollowed] = useState(false) 
+    useEffect(()=>{
+        if(!isLoggedIn) return;
+
+        const fetchUser= async ()=>{
+            const data = getFollowDetails({userId: VideoDetails.userId})
+            if(data == "FOLLOW"){
+                setIsFollowed(true)
+            }else if(data == "UNFOLLOW"){
+                setIsFollowed(false)
+            }
+        }
+        fetchUser();
+    }, [VideoDetails])
+
+    const handleFollowBtn = (type) => {
+        if(!isLoggedIn){
+            navigate("/Login")
+            return;
+        }
+
+        followAction(type, {channelId: VideoDetails.channelId});
+        if(type == "FOllOW"){
+            setIsFollowed(true)
+        }else if( type === "UNFOLLOW"){
+            setIsFollowed(false)
+        }
+    }
+
   return (
     <div className='details-block'>
         <div className='save-video material-symbols-outlined'>bookmark</div>
@@ -155,27 +139,39 @@ function VideoDetailsPage  ({VideoDetails})  {
         <h5 className='caption'>{VideoDetails ? (VideoDetails.caption) : "Caption"}</h5>
                 
         <div className='like-dislike-container'>
-            <div onClick={handleLike}>
+            <div onClick={()=>{handleReaction("LIKE")}}>
                 <span className={`material-symbols-outlined ${isLiked ? 'Fill' : ''}`} >thumb_up</span>
                 <span>{PrintLike()}</span>
             </div>
-            <div onClick={handleDisLike}>
+            <div onClick={()=>{handleReaction("DISLIKE")}}>
                 <span className={`material-symbols-outlined ${isDisliked ? 'Fill' : ''}`}>thumb_down</span>
             </div>
         </div>
                 
         <div className='channel-details'>
             <div className='flex'>
-                <img src={userData?.profile || profile} alt='profile' className='profile-picture' />
+                <img src={channelData?.profile || profile} alt='profile' className='profile-picture' />
                 <div>
-                    <p className='channel-username'>{userData ? (userData.username) : "Username"}</p>
+                    <p className='channel-username'>{channelData ? (channelData.username) : "Username"}</p>
                     <p className='channel-followers'>{follower()} followers</p>
                 </div>
             </div>
             <div className='text-center flex items-center'>
-                <button onClick={handleFollowBtn} className='follow-btn'>
-                    {followBtn ? "Unfollow" : "Follow"}
-                </button>
+                {!isFollowed? 
+                    <button 
+                        onClick={() => {handleFollowBtn("FOLLOW")}} 
+                        className='follow-btn'
+                    >
+                        Follow
+                    </button> 
+                    :
+                    <button 
+                        onClick={() => {handleFollowBtn("UNFOLLOW")}} 
+                        className='follow-btn'
+                    >
+                        Unfollow
+                    </button>
+                }
             </div>
         </div>
     
@@ -184,4 +180,114 @@ function VideoDetailsPage  ({VideoDetails})  {
         </p>
     </div>
   )
+}
+
+async function getReactionStatus ({videoId}){
+    try{
+        const res = await fetch("http://localhost:8080/video/status/reaction",{
+            method: "GET",
+            credentials:"true",
+            body: JSON.stringify(videoId)
+        })
+
+        if(res.ok){
+            const data = await res.json()
+            return data.reactionType;
+        }else{
+            console.log(res.status);
+        }
+    }catch(error){
+        console.log(error);
+    }
+    return null;
+}
+
+function getCookieValue(cookieName) {
+  const cookies = document.cookie.split('; ');
+  for (let cookie of cookies) {
+    const [name, value] = cookie.split('=');
+    if (name === cookieName) {
+      return decodeURIComponent(value);
+    }
+  }
+  return null; 
+}
+
+async function reaction ({videoId, reactionType}){
+    try {
+        const data = {
+            "videoId" : videoId,
+            "reactionType" : reactionType 
+        }
+
+        const res = await fetch("http://localhost:8080/video/reaction",{
+            method:"POST",
+            headers :{
+                "X-XSRF-TOKEN":  getCookieValue("XSRF-TOKEN") 
+            },
+            credentials: "include",
+            body: JSON.stringify(data)
+        })
+    }catch(error){
+        console.error(error)
+    }
+}
+
+async function getChannelData({userId}){
+    try{
+        const res = await fetch(`http://localhost:8080/user/channel/${userId}`,{
+            method:"GET"
+        })
+
+        if(res.ok){
+            return res.json()
+        }else{
+            console.log(res.status)
+        }
+    }catch(error){
+        console.error(error)
+    }
+}
+
+async function getFollowDetails({channelId}){
+    try{
+        const res = await fetch (`http://localhost:8080/follower/status/follow/${channelId}`,{
+            method:"GET"
+        })
+
+        if(res.ok){
+            const data = await res.json()
+            return data.action;
+        }else{
+            console.log(res.status);
+        }
+    }catch(error){
+        console.log(error);
+    }
+    return null;
+}
+
+async function followAction ({ action, channelId }){
+    try{
+        const data = {
+            "action" : action,
+            "channelId" : channelId
+        }
+
+        const res = await fetch("http://localhost:8080/followers/follow-unfollow",{
+            method:"POST",
+            headers:{
+                "X-XSRF-TOKEN": getCookieValue("XSRF-TOKEN")
+            },
+            credentials:"include",
+            body: JSON.stringify(data)
+        })
+        if(res.ok){
+            console.log("channel successfully", action);
+        }else{
+            console.log(res.status)
+        }
+    }catch(error){
+        console.error(error);
+    }
 }

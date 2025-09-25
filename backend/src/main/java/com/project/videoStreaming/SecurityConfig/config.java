@@ -36,7 +36,7 @@ public class config {
         return httpSecurity
                         .csrf(csrf -> csrf
                             .csrfTokenRepository(CookieCsrfTokenRepository.withHttpOnlyFalse())
-                            .ignoringRequestMatchers("/api/auth/login","/api/auth//register/request-OTP", "/api/auth//request-OTP/*"))        
+                            .ignoringRequestMatchers("/api/auth/login","/api/auth/register/request-OTP", "/api/auth/request-OTP/*"))        
                         .cors(cors -> cors.configurationSource(corsConfigurationSource()))
                         .authorizeHttpRequests(auth -> auth
                                 .requestMatchers("/api/auth/**").permitAll()
