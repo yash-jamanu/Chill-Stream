@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react'
 import profile from '../assets/profile.png'
 import './VideoPage.css'
 import { useAuth } from '../AuthLogin'
-import { Navigate, useNavigate } from 'react-router-dom'
+import { useNavigate } from 'react-router-dom'
 
 export default VideoDetailsPage
 
