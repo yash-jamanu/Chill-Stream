@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 
 
 
@@ -26,14 +27,15 @@ public class reactionController {
     @Autowired
     reactionServiceImp service;
 
-    @GetMapping("/status/reaction")
-    public videoReaction getReactionStatus(UUID videoId) {
+    @GetMapping("/status/reaction/{videoId}")
+    public videoReaction getReactionStatus(@PathVariable UUID videoId) {
+
         UUID userId = auth.getUserId();
         return service.getReactionStatus(userId, videoId);
     }
 
-    @PostMapping("/reaction")
-    public void videoReaction(@PathVariable videoReaction VideoReaction) {
+    @PostMapping("/videos/reaction")
+    public void videoReaction(@RequestBody videoReaction VideoReaction) {
         UUID userId = auth.getUserId();
         VideoReaction.setUserId(userId);
         service.videoReaction(VideoReaction);

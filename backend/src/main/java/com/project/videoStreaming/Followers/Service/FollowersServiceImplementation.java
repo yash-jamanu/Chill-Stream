@@ -25,13 +25,14 @@ public class FollowersServiceImplementation implements FollowerService {
     @Override
     public Follower getfollowStatus (UUID followersId, UUID channelId){
         Optional <FollowersEntity> getAction = followerRepository.findTopByFollowersIdAndChannelIdOrderByFollowedAtDesc(followersId, channelId);
+        
         Follower action = new Follower();
+
         if(getAction.isPresent()){
             FollowersEntity entity = getAction.get();
             BeanUtils.copyProperties(entity, action);
-            return action;
         }
-        return null;
+        return action;
     }
 
     @Override

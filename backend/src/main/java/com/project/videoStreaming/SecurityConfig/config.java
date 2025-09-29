@@ -14,7 +14,6 @@ import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
-import org.springframework.security.web.csrf.CookieCsrfTokenRepository;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
@@ -34,9 +33,7 @@ public class config {
     public SecurityFilterChain securityFilterChain(HttpSecurity httpSecurity) throws Exception{
 
         return httpSecurity
-                        .csrf(csrf -> csrf
-                            .csrfTokenRepository(CookieCsrfTokenRepository.withHttpOnlyFalse())
-                            .ignoringRequestMatchers("/api/auth/login","/api/auth/register/request-OTP", "/api/auth/request-OTP/*"))        
+                        .csrf(csrf->csrf.disable())
                         .cors(cors -> cors.configurationSource(corsConfigurationSource()))
                         .authorizeHttpRequests(auth -> auth
                                 .requestMatchers("/api/auth/**").permitAll()
@@ -44,6 +41,7 @@ public class config {
                                 .requestMatchers("/user/channel/*").permitAll()
                                 .requestMatchers("/comments/Video/*").permitAll()
                                 .requestMatchers("/api/auth/status", "/search").permitAll()
+                                .requestMatchers("/csrf/token").permitAll()
                                 .anyRequest().authenticated())
                         .sessionManagement(session -> session
                                 .sessionCreationPolicy(SessionCreationPolicy.IF_REQUIRED))
@@ -68,9 +66,8 @@ public class config {
     public CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration configuration = new CorsConfiguration();
         configuration.setAllowedOrigins(List.of("http://localhost:5173"));
-        configuration.setAllowedMethods(List.of("*"));
+        configuration.setAllowedMethods(List.of("GET","POST", "OPTION", "PUT", "PATCH", "DELETE"));
         configuration.setAllowedHeaders(List.of("*"));
-        configuration.setExposedHeaders(List.of("Set-Cookie"));
         configuration.setAllowCredentials(true);
 
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();

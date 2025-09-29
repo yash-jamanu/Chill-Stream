@@ -25,10 +25,7 @@ function ProfileDetails(){
         try{
             const response = await fetch("http://localhost:8080/api/auth/logout", {
             method: "POST",
-            credentials: "include",
-            headers : {
-                "X-XSRF-TOKEN" : getCookieValue("XSRF-TOKEN")
-            }
+            credentials: "include"
             });
 
             if(response.ok){

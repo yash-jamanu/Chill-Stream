@@ -207,8 +207,7 @@ async function updateVideo (e ,{thumbnail, newVideoData}) {
         const res = await fetch ("http://localhost:8080/video/update",{
             method : "PUT",
             headers: {
-              'Content-Type': 'application/json',
-              "X-XSRF-TOKEN": getCookieValue("XSRF-TOKEN")
+              'Content-Type': 'application/json'
             },
             credentials:"include",
             body: JSON.stringify(data)

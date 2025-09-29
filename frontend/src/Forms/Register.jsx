@@ -40,8 +40,7 @@ export const Register = () => {
       const res = await fetch("http://localhost:8080/api/auth/register/request-OTP",{
         method : "POST",
         headers: { 
-          "Content-Type": "application/json", 
-          "X-XSRF-TOKEN": getCookieValue("XSRF-TOKEN")
+          "Content-Type": "application/json"
         },
         credentials: "include",
         body: JSON.stringify(data)

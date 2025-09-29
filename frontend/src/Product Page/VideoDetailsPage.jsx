@@ -37,7 +37,7 @@ function VideoDetailsPage  ({VideoDetails})  {
     useEffect(()=>{
         if (!isLoggedIn) return;
         const fetchStatus = async () => {
-            const status = getReactionStatus({videoid:VideoDetails.videoId});
+            const status = getReactionStatus({videoId:VideoDetails.videoId});
             if(status == "LIKE"){
                 setIsLiked(true)
             }else if(status == "DISLIKE"){
@@ -53,7 +53,7 @@ function VideoDetailsPage  ({VideoDetails})  {
         return;
       }
 
-      reaction({videoId: VideoDetails.videoId}, type);
+      reaction({videoId: VideoDetails.videoId, reactionType: type});
       if (type === "LIKE") {
         if (isLiked) {
           setIsLiked(false);
@@ -107,7 +107,7 @@ function VideoDetailsPage  ({VideoDetails})  {
         if(!isLoggedIn) return;
 
         const fetchUser= async ()=>{
-            const data = getFollowDetails({userId: VideoDetails.userId})
+            const data = getFollowDetails({channelId: VideoDetails.userId})
             if(data == "FOLLOW"){
                 setIsFollowed(true)
             }else if(data == "UNFOLLOW"){
@@ -184,15 +184,13 @@ function VideoDetailsPage  ({VideoDetails})  {
 
 async function getReactionStatus ({videoId}){
     try{
-        const res = await fetch("http://localhost:8080/video/status/reaction",{
+        const res = await fetch(`http://localhost:8080/video/status/reaction/${videoId}`,{
             method: "GET",
-            credentials:"true",
-            body: JSON.stringify(videoId)
+            credentials:"include"
         })
 
         if(res.ok){
-            const data = await res.json()
-            return data.reactionType;
+            return res.json()
         }else{
             console.log(res.status);
         }
@@ -202,32 +200,28 @@ async function getReactionStatus ({videoId}){
     return null;
 }
 
-function getCookieValue(cookieName) {
-  const cookies = document.cookie.split('; ');
-  for (let cookie of cookies) {
-    const [name, value] = cookie.split('=');
-    if (name === cookieName) {
-      return decodeURIComponent(value);
-    }
-  }
-  return null; 
-}
+const csrfToken = document.cookie.replace(/(?:(?:^|.*;\s*)XSRF-TOKEN\s*\=\s*([^;]*).*$)|^.*$/, '$1');
 
 async function reaction ({videoId, reactionType}){
     try {
+        
+        const token = getCookieValue("XSRF-TOKEN"); 
+        
         const data = {
             "videoId" : videoId,
             "reactionType" : reactionType 
         }
-
-        const res = await fetch("http://localhost:8080/video/reaction",{
+        const res = await fetch("http://localhost:8080/video/videos/reaction",{
             method:"POST",
             headers :{
-                "X-XSRF-TOKEN":  getCookieValue("XSRF-TOKEN") 
+                "Content-Type": "application/json"
             },
             credentials: "include",
             body: JSON.stringify(data)
         })
+        if (!res.ok) {
+          console.error("Request failed:", res.status);
+        }
     }catch(error){
         console.error(error)
     }
@@ -252,12 +246,12 @@ async function getChannelData({userId}){
 async function getFollowDetails({channelId}){
     try{
         const res = await fetch (`http://localhost:8080/follower/status/follow/${channelId}`,{
-            method:"GET"
+            method:"GET",
+            credentials:"include"
         })
 
         if(res.ok){
-            const data = await res.json()
-            return data.action;
+            return res.json()
         }else{
             console.log(res.status);
         }
@@ -277,15 +271,18 @@ async function followAction ({ action, channelId }){
         const res = await fetch("http://localhost:8080/followers/follow-unfollow",{
             method:"POST",
             headers:{
-                "X-XSRF-TOKEN": getCookieValue("XSRF-TOKEN")
+                "Content-Type": "application/json"
             },
             credentials:"include",
             body: JSON.stringify(data)
         })
+        console.log("Header token:", getCookieValue("XSRF-TOKEN"));
+        console.log("Cookie token:", document.cookie);
         if(res.ok){
             console.log("channel successfully", action);
         }else{
             console.log(res.status)
+            
         }
     }catch(error){
         console.error(error);

@@ -30,6 +30,7 @@ public class FollowersController {
     @GetMapping("/status/follow/{channelId}")
     public Follower getFollwerStatus(@PathVariable UUID channelId) {
         UUID followersId = auth.getUserId();
+
         return Service.getfollowStatus(followersId, channelId);
     }
     

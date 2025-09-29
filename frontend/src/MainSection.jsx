@@ -136,10 +136,7 @@ async function deleteVideo(videoId){
   try{
     const res = await fetch (`http://localhost:8080/video/delete/${videoId}`,{
       method:"DELETE",
-      credentials:"include",
-      headers : {
-        "X-XSRF-TOKEN" : getCookieValue("XSRF-TOKEN")
-      }
+      credentials:"include"
     })
 
     if(res.ok){
@@ -170,10 +167,11 @@ export const MainSection = ({searchText, type, value}) => {
   return (
     <div className='main-section'>
         <div className='container-box'>
-            {videos.map((video, id) => (
+            {videos.map((video) => (
                 <CardContainer
-                    video={video}
-                    onClick={() =>{handleNavigation(video)}}
+                  key={video.videoId}
+                  video={video}
+                  onClick={() =>{handleNavigation(video)}}
                 />
             ))}        
         </div>

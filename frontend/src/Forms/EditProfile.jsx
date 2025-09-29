@@ -176,8 +176,7 @@ async function updateUser ({profilePic, newUserData}) {
         const res = await fetch ("http://localhost:8080/user/update",{
             method : "PUT",
             headers: {
-              'Content-Type': 'application/json',
-              "X-XSRF-TOKEN": getCookieValue("XSRF-TOKEN")
+              'Content-Type': 'application/json'
             },
             credentials:"include",
             body: JSON.stringify(data)

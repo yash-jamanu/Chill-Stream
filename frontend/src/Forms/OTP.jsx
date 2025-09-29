@@ -25,8 +25,8 @@ export const OTP = () => {
         const res = await fetch(`http://localhost:8080/api/auth/request-OTP/${OTP}`,{
           method : "POST",
           headers: { 
-            "Content-Type": "application/json",
-            "X-XSRF-TOKEN": getCookieValue("XSRF-TOKEN") },
+            "Content-Type": "application/json"
+          }, 
           credentials: "include"
         })
         console.log(res.status)

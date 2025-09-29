@@ -86,8 +86,7 @@ async function createVideo({videoURL, details, thumbnail}){
     const res = await fetch ('http://localhost:8080/video/create',{
       method : "POST",
       headers: {
-        'Content-Type': 'application/json',
-        "X-XSRF-TOKEN": getCookieValue("XSRF-TOKEN")
+        'Content-Type': 'application/json'
       },
       credentials:"include",
       body: JSON.stringify(payload)

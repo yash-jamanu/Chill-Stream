@@ -78,13 +78,14 @@ public class reactionServiceImp implements reactionService {
     @Override
     public videoReaction getReactionStatus(UUID userId, UUID videoId) {
         Optional <reactionEntity> getReaction = repository.findTopByUserIdAndVideoIdOrderByReactedAtDesc(userId, videoId);
+        
         videoReaction reaction = new videoReaction();
+        
         if(getReaction.isPresent()){
             reactionEntity entity = getReaction.get();
             BeanUtils.copyProperties(entity, reaction);
-            return reaction;
         }
-        return null;
+        return reaction;
     }
 
 }
