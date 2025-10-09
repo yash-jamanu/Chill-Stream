@@ -37,7 +37,10 @@ public class FollowersController {
 
     @PostMapping("/follow-unfollow")
     public void follower(@RequestBody Follower follower) {
-        follower.setFollowersId(auth.getUserId());
+
+        UUID followerId = auth.getUserId();
+        follower.setFollowersId(followerId);
+        System.out.println(follower);
         Service.follower(follower);
     }
     

@@ -39,7 +39,7 @@ public class reactionEntity {
     @Enumerated(EnumType.STRING)
     private reaction reactionType;
 
-    @Column(name = "reacted_at")
-    private LocalDateTime reactedAt;
+    @Column(name = "reaction_time")
+    private LocalDateTime reactionTime;
 
 }

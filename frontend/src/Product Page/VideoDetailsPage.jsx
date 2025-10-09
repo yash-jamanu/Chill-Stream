@@ -123,10 +123,10 @@ function VideoDetailsPage  ({VideoDetails})  {
             return;
         }
 
-        followAction(type, {channelId: VideoDetails.channelId});
+        followAction({action: type, channelId: VideoDetails.userId});
         if(type == "FOllOW"){
             setIsFollowed(true)
-        }else if( type === "UNFOLLOW"){
+        }else if( type == "UNFOLLOW"){
             setIsFollowed(false)
         }
     }
@@ -200,12 +200,8 @@ async function getReactionStatus ({videoId}){
     return null;
 }
 
-const csrfToken = document.cookie.replace(/(?:(?:^|.*;\s*)XSRF-TOKEN\s*\=\s*([^;]*).*$)|^.*$/, '$1');
-
 async function reaction ({videoId, reactionType}){
     try {
-        
-        const token = getCookieValue("XSRF-TOKEN"); 
         
         const data = {
             "videoId" : videoId,
@@ -267,8 +263,8 @@ async function followAction ({ action, channelId }){
             "action" : action,
             "channelId" : channelId
         }
-
-        const res = await fetch("http://localhost:8080/followers/follow-unfollow",{
+        console.log(data)
+        const res = await fetch("http://localhost:8080/follower/follow-unfollow",{
             method:"POST",
             headers:{
                 "Content-Type": "application/json"
@@ -276,10 +272,8 @@ async function followAction ({ action, channelId }){
             credentials:"include",
             body: JSON.stringify(data)
         })
-        console.log("Header token:", getCookieValue("XSRF-TOKEN"));
-        console.log("Cookie token:", document.cookie);
         if(res.ok){
-            console.log("channel successfully", action);
+            console.log("channel successfully");
         }else{
             console.log(res.status)
             

@@ -11,7 +11,7 @@ import com.project.videoStreaming.VideoReaction.Entity.reactionEntity;
 @Repository
 public interface reactionRepository extends JpaRepository<reactionEntity, UUID>{
 
-    Optional <reactionEntity> findTopByUserIdAndVideoIdOrderByReactedAtDesc(UUID userId, UUID videoId);
+    Optional <reactionEntity> findTopByUserIdAndVideoIdOrderByReactionTimeDesc(UUID userId, UUID videoId);
 
 
 }

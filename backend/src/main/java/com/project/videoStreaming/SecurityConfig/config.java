@@ -14,20 +14,25 @@ import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
-
+import com.project.videoStreaming.Filter.JwtFilter;
 import com.project.videoStreaming.Users.Service.CustomUserLogin;
-
 
 
 @Configuration
 @EnableWebSecurity
 public class config {
 
+
     @Autowired
     CustomUserLogin customUserLogin;
+
+    @Autowired
+    JwtFilter jwtFilter;
+
 
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity httpSecurity) throws Exception{
@@ -43,8 +48,9 @@ public class config {
                                 .requestMatchers("/api/auth/status", "/search").permitAll()
                                 .requestMatchers("/csrf/token").permitAll()
                                 .anyRequest().authenticated())
+                        .addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class)
                         .sessionManagement(session -> session
-                                .sessionCreationPolicy(SessionCreationPolicy.IF_REQUIRED))
+                                .sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                         .logout(logout -> logout.logoutSuccessUrl("/login").permitAll())
                         .build();
     } 

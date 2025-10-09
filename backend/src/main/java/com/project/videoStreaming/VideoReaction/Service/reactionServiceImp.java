@@ -25,7 +25,7 @@ public class reactionServiceImp implements reactionService {
     public void videoReaction(videoReaction videoReaction) {
     try {
         Optional<reactionEntity> existingReactionOpt =
-                repository.findTopByUserIdAndVideoIdOrderByReactedAtDesc(videoReaction.getUserId(), videoReaction.getVideoId());
+                repository.findTopByUserIdAndVideoIdOrderByReactionTimeDesc(videoReaction.getUserId(), videoReaction.getVideoId());
 
         if (existingReactionOpt.isPresent()) {
             reactionEntity existingReaction = existingReactionOpt.get();
@@ -77,7 +77,7 @@ public class reactionServiceImp implements reactionService {
 
     @Override
     public videoReaction getReactionStatus(UUID userId, UUID videoId) {
-        Optional <reactionEntity> getReaction = repository.findTopByUserIdAndVideoIdOrderByReactedAtDesc(userId, videoId);
+        Optional <reactionEntity> getReaction = repository.findTopByUserIdAndVideoIdOrderByReactionTimeDesc(userId, videoId);
         
         videoReaction reaction = new videoReaction();
         

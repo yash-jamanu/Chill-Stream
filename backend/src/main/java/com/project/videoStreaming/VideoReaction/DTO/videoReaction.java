@@ -15,5 +15,5 @@ public class videoReaction {
     private UUID userId;
     private UUID videoId;
     private reaction reactionType;
-    private Timestamp reacted_at;
+    private Timestamp reactionTime;
 }
