@@ -14,8 +14,10 @@ import lombok.extern.slf4j.Slf4j;
 
 import java.util.Map;
 
+import org.springframework.http.HttpHeaders;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseCookie;
 import org.springframework.http.ResponseEntity;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
@@ -83,7 +85,9 @@ public class AuthUser {
             UserDetails  userDetails = userDetailsService.loadUserByUsername(request.getEmail()); 
 
             String jwt = jwtUtil.generateToken(userDetails.getUsername());
-            return new ResponseEntity<>(jwt, HttpStatus.OK);
+
+            ResponseCookie cookie = ResponseCookie.from("jwt", jwt).httpOnly(true).secure(true).path("/").maxAge(24*60*60).build();
+            return ResponseEntity.ok().header(HttpHeaders.SET_COOKIE, cookie.toString()).body("Login successful");
         }catch(Exception e){
             log.error("Exception occured while createAuthenticationToken", e);
             return new ResponseEntity<>("Incorrect username password", HttpStatus.BAD_REQUEST);

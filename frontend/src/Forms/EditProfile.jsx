@@ -153,17 +153,6 @@ export const EditProfile = () => {
 async function updateUser ({profilePic, newUserData}) {
     const navigate = useNavigate();
 
-    function getCookieValue(cookieName) {
-      const cookies = document.cookie.split('; ');
-      for (let cookie of cookies) {
-        const [name, value] = cookie.split('=');
-        if (name === cookieName) {
-          return decodeURIComponent(value);
-        }
-      }
-      return null; // Return null if the cookie is not found
-    }
-
     try {
         const data = {
             'profile' : profilePic,
@@ -178,7 +167,7 @@ async function updateUser ({profilePic, newUserData}) {
             headers: {
               'Content-Type': 'application/json'
             },
-            credentials:"include",
+            credentials : "include",
             body: JSON.stringify(data)
         })
         if(res.ok){

@@ -26,33 +26,19 @@ export const LoginForm = () => {
         e.preventDefault(); 
         setError('');
 
-        function getCookieValue(cookieName) {
-          const cookies = document.cookie.split('; ');
-          for (let cookie of cookies) {
-            const [name, value] = cookie.split('=');
-            if (name === cookieName) {
-              return decodeURIComponent(value);
-            }
-          }
-          return null; // Return null if the cookie is not found
-        }
-
         try {
           const res = await fetch("http://localhost:8080/api/auth/login", {
             method: "POST",
             headers: { 
               "Content-Type": "application/json"
-             },
-            body: JSON.stringify(data),
-            credentials: "include"
+            },
+            body: JSON.stringify(data)
           });
-          console.log(res.status)
+
           if (res.ok) {
             navigate("/");
             setIsLoggedIn(true);
-          } else if (res.status === 401) {
-            setError("Invalid email or password");
-          } else {
+          }else {
             setError(`Login failed. Error ${res.status}`);
           }
         } catch (err) {

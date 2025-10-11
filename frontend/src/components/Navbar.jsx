@@ -100,20 +100,15 @@ export const Navbar = ({onSearch, isSideBarOpen, toggleSideBar}) => {
 
 async function getUserDetails(){
   try{
+
     const res = await fetch("http://localhost:8080/user/details",
       {
-        credentials:"include"
+        method: "GET",
+        credentials: "include"
       }
     )
-    if(res.ok){
-      const data = await res.json();
-      console.log(data, res.status);
-      localStorage.setItem("userID", data.userId);
-      return data;
-    }else{
-      console.error("Failed to fetch user details:", res.status);
-      return {};
-    }
+    return await res.json();
+
   }catch(err){
     console.error("Error fetching user details:", err);
     return {};
@@ -125,11 +120,7 @@ async function searchByText({text}){
   try{
     const res = await fetch(`http://localhost:8080/search/${searchText}`)
     
-    if(res.ok){
-      return res.json();
-    }else{
-      console.log(res.status)
-    }
+    return res.json();
   }catch(error){
     console.error(error);  
   }

@@ -16,17 +16,6 @@ function VideoComments  ({VideoId}) {
             videoId: VideoId
         };
 
-        function getCookieValue(cookieName) {
-          const cookies = document.cookie.split('; ');
-          for (let cookie of cookies) {
-            const [name, value] = cookie.split('=');
-            if (name === cookieName) {
-              return decodeURIComponent(value);
-            }
-          }
-          return null; // Return null if the cookie is not found
-        }
-
         try {
             const res = await fetch(`http://127.0.0.1:8080/comments/user/comment`, {
                 method: "POST",
