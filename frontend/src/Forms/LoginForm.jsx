@@ -37,6 +37,9 @@ export const LoginForm = () => {
 
           if (res.ok) {
             navigate("/");
+            let jwt  = await res.text()
+            console.log(jwt)
+            localStorage.setItem("jwt",jwt)
             setIsLoggedIn(true);
           }else {
             setError(`Login failed. Error ${res.status}`);

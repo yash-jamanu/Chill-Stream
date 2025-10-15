@@ -103,8 +103,10 @@ async function getUserDetails(){
 
     const res = await fetch("http://localhost:8080/user/details",
       {
-        method: "GET",
-        credentials: "include"
+        headers: {
+          "Authorization" : `Bearer ${localStorage.getItem("jwt")}`
+        },
+        method: "GET"
       }
     )
     return await res.json();
