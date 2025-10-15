@@ -15,7 +15,9 @@ function ProfileDetails(){
         try{
             const response = await fetch("http://localhost:8080/api/auth/logout", {
             method: "POST",
-            credentials: "include"
+            headers :{
+                "Authorization" : `Bearer ${localStorage.getItem("jwt")}`
+            }
             });
 
             if(response.ok){

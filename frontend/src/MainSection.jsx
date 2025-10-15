@@ -23,7 +23,9 @@ async function getData(text, type, value){
                 case "me": {
                     res = await fetch(YourVideos, {
                         method:"GET",
-                        credentials: "include"
+                        headers :{
+                          "Authorization" : `Bearer ${localStorage.getItem("jwt")}`
+                        }
                     });
                     break;
                 }
@@ -36,7 +38,9 @@ async function getData(text, type, value){
                 case "wishlist" : {
                     res = await fetch(wishlist, {
                         method:"GET",
-                        credentials: "include"
+                        headers :{
+                          "Authorization" : `Bearer ${localStorage.getItem("jwt")}`
+                        }
                     });
                     break;
                 }
@@ -126,7 +130,9 @@ async function deleteVideo(videoId){
   try{
     const res = await fetch (`http://localhost:8080/video/delete/${videoId}`,{
       method:"DELETE",
-      credentials:"include"
+      headers :{
+        "Authorization" : `Bearer ${localStorage.getItem("jwt")}`
+      }
     })
 
     if(res.ok){

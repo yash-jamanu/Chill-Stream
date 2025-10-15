@@ -20,9 +20,9 @@ function VideoComments  ({VideoId}) {
             const res = await fetch(`http://127.0.0.1:8080/comments/user/comment`, {
                 method: "POST",
                 headers: {
-                    'Content-Type': 'application/json'
+                    'Content-Type': 'application/json',
+                    "Authorization" : `Bearer ${localStorage.getItem("jwt")}`
                 },
-                credentials:"include",
                 body: JSON.stringify(data)
             });
 

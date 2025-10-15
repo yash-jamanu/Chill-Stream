@@ -186,7 +186,9 @@ async function getReactionStatus ({videoId}){
     try{
         const res = await fetch(`http://localhost:8080/video/status/reaction/${videoId}`,{
             method: "GET",
-            credentials:"include"
+            headers :{
+                "Authorization" : `Bearer ${localStorage.getItem("jwt")}`
+            }
         })
 
         if(res.ok){
@@ -210,9 +212,9 @@ async function reaction ({videoId, reactionType}){
         const res = await fetch("http://localhost:8080/video/videos/reaction",{
             method:"POST",
             headers :{
-                "Content-Type": "application/json"
+                "Content-Type": "application/json",
+                "Authorization" : `Bearer ${localStorage.getItem("jwt")}`
             },
-            credentials: "include",
             body: JSON.stringify(data)
         })
         if (!res.ok) {
@@ -243,7 +245,9 @@ async function getFollowDetails({channelId}){
     try{
         const res = await fetch (`http://localhost:8080/follower/status/follow/${channelId}`,{
             method:"GET",
-            credentials:"include"
+            headers :{
+                "Authorization" : `Bearer ${localStorage.getItem("jwt")}`
+            }
         })
 
         if(res.ok){
@@ -267,9 +271,10 @@ async function followAction ({ action, channelId }){
         const res = await fetch("http://localhost:8080/follower/follow-unfollow",{
             method:"POST",
             headers:{
-                "Content-Type": "application/json"
+                "Content-Type": "application/json",
+                "Authorization" : `Bearer ${localStorage.getItem("jwt")}`
             },
-            credentials:"include",
+            
             body: JSON.stringify(data)
         })
         if(res.ok){

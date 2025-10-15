@@ -15,8 +15,7 @@ export const OTP = () => {
         method : "POST",
         headers: { 
           "Content-Type": "application/json"
-        },
-        credentials: "include"
+        }
       })
       console.log(res.status)
       if(res.ok){

@@ -30,7 +30,6 @@ export const Register = () => {
         headers: { 
           "Content-Type": "application/json"
         },
-        credentials: "include",
         body: JSON.stringify(data)
       })
       console.log(res.status)

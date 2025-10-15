@@ -77,9 +77,9 @@ async function createVideo({videoURL, details, thumbnail}){
     const res = await fetch ('http://localhost:8080/video/create',{
       method : "POST",
       headers: {
-        'Content-Type': 'application/json'
+        'Content-Type': 'application/json',
+        "Authorization" : `Bearer ${localStorage.getItem("jwt")}`
       },
-      credentials:"include",
       body: JSON.stringify(payload)
     })
     console.log("video api status:", res.status)

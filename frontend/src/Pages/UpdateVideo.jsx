@@ -195,9 +195,9 @@ async function updateVideo (e ,{thumbnail, newVideoData}) {
         const res = await fetch ("http://localhost:8080/video/update",{
             method : "PUT",
             headers: {
-              'Content-Type': 'application/json'
+              'Content-Type': 'application/json',
+              "Authorization" : `Bearer ${localStorage.getItem("jwt")}` 
             },
-            credentials:"include",
             body: JSON.stringify(data)
         })
         if(res.ok){
