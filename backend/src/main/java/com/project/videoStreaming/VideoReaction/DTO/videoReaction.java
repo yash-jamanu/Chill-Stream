@@ -1,6 +1,6 @@
 package com.project.videoStreaming.VideoReaction.DTO;
 
-import java.sql.Timestamp;
+import java.time.LocalDate;
 import java.util.UUID;
 
 import lombok.AllArgsConstructor;
@@ -15,5 +15,5 @@ public class videoReaction {
     private UUID userId;
     private UUID videoId;
     private reaction reactionType;
-    private Timestamp reactionTime;
+    private LocalDate reactionTime;
 }

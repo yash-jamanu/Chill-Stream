@@ -110,7 +110,7 @@ public class UserServiceImplementation implements UserService{
         Optional <UserEntity> getChannel = Repository.findByUserId(ChannelId);
         if(getChannel.isPresent()){
             UserEntity entity = getChannel.get();
-            entity.setSubs_count(entity.getSubs_count()+1);
+            entity.setSubs_count(entity.getSubs_count() + 1);
             Repository.save(entity);
         }
     }
@@ -120,7 +120,7 @@ public class UserServiceImplementation implements UserService{
         Optional <UserEntity> getChannel = Repository.findByUserId(ChannelId);
         if(getChannel.isPresent()){
             UserEntity entity = getChannel.get();
-            entity.setSubs_count(entity.getSubs_count()-1);
+            entity.setSubs_count(entity.getSubs_count() - 1);
             Repository.save(entity);
         }
     }

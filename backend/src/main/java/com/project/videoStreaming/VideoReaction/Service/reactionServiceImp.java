@@ -1,4 +1,5 @@
 package com.project.videoStreaming.VideoReaction.Service;
+import java.time.LocalDateTime;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -30,13 +31,17 @@ public class reactionServiceImp implements reactionService {
         if (existingReactionOpt.isPresent()) {
             reactionEntity existingReaction = existingReactionOpt.get();
 
+            // User removes its reaction from the video
+            // If the user had already liked the video and now clicks again to remove the like 
+            // It removes the reaction and makes it "NONE" 
             if (existingReaction.getReactionType() == videoReaction.getReactionType()) {
                 if (videoReaction.getReactionType() == reaction.LIKE) {
                     videoImp.decrementLike(videoReaction.getVideoId());
                 } else {
                     videoImp.decrementDisLike(videoReaction.getVideoId());
                 }
-                repository.delete(existingReaction);
+                repository.deleteByUserIdAndVideoId(videoReaction.getUserId(), videoReaction.getVideoId());
+
                 return;
             }
 
@@ -53,12 +58,16 @@ public class reactionServiceImp implements reactionService {
 
             // Update existing reaction
             existingReaction.setReactionType(videoReaction.getReactionType());
+            existingReaction.setReactionTime(LocalDateTime.now());
             repository.save(existingReaction);
 
         } else {
             // Case 3: First time reaction
             reactionEntity newReaction = new reactionEntity();
-            BeanUtils.copyProperties(videoReaction, newReaction);
+            newReaction.setUserId(videoReaction.getUserId());
+            newReaction.setVideoId(videoReaction.getVideoId());
+            newReaction.setReactionType(videoReaction.getReactionType());
+            newReaction.setReactionTime(LocalDateTime.now());
 
             if (videoReaction.getReactionType() == reaction.LIKE) {
                 videoImp.incrementLike(videoReaction.getVideoId());

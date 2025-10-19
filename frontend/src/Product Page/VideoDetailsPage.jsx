@@ -102,32 +102,33 @@ function VideoDetailsPage  ({VideoDetails})  {
         return formattedFollowers;
     }
 
-    const [isFollowed, setIsFollowed] = useState(false) 
+    let [FollowAction, setFollowAction] = useState(false)
+
     useEffect(()=>{
         if(!isLoggedIn) return;
 
         const fetchUser= async ()=>{
-            const data = getFollowDetails({channelId: VideoDetails.userId})
-            if(data == "FOLLOW"){
-                setIsFollowed(true)
-            }else if(data == "UNFOLLOW"){
-                setIsFollowed(false)
+            const data = await getFollowDetails({channelId: VideoDetails.userId})
+            if(data.action == "FOLLOW" || data.action == null){
+                setFollowAction(true)
+            }else{
+                setFollowAction(false)
             }
         }
         fetchUser();
     }, [VideoDetails])
 
-    const handleFollowBtn = (type) => {
+    const handleFollowBtn = async () => {
         if(!isLoggedIn){
             navigate("/Login")
             return;
         }
-
-        followAction({action: type, channelId: VideoDetails.userId});
-        if(type == "FOllOW"){
-            setIsFollowed(true)
-        }else if( type == "UNFOLLOW"){
-            setIsFollowed(false)
+        await followAction({ channelId: VideoDetails.userId });
+        let data = await getFollowDetails({channelId: VideoDetails.userId})
+        if(data.action == "FOLLOW"){
+            setFollowAction(true)
+        }else{
+            setFollowAction(false)
         }
     }
 
@@ -140,11 +141,11 @@ function VideoDetailsPage  ({VideoDetails})  {
                 
         <div className='like-dislike-container'>
             <div onClick={()=>{handleReaction("LIKE")}}>
-                <span className={`material-symbols-outlined ${isLiked ? 'Fill' : ''}`} >thumb_up</span>
+                <span className={`material-symbols-outlined`} >thumb_up</span>
                 <span>{PrintLike()}</span>
             </div>
             <div onClick={()=>{handleReaction("DISLIKE")}}>
-                <span className={`material-symbols-outlined ${isDisliked ? 'Fill' : ''}`}>thumb_down</span>
+                <span className={`material-symbols-outlined`}>thumb_down</span>
             </div>
         </div>
                 
@@ -157,21 +158,11 @@ function VideoDetailsPage  ({VideoDetails})  {
                 </div>
             </div>
             <div className='text-center flex items-center'>
-                {!isFollowed? 
-                    <button 
-                        onClick={() => {handleFollowBtn("FOLLOW")}} 
-                        className='follow-btn'
-                    >
-                        Follow
-                    </button> 
-                    :
-                    <button 
-                        onClick={() => {handleFollowBtn("UNFOLLOW")}} 
-                        className='follow-btn'
-                    >
-                        Unfollow
-                    </button>
-                }
+               {FollowAction? 
+                        <button onClick={handleFollowBtn}>unfollow</button>
+                        :
+                        <button onClick={handleFollowBtn}>follow</button>
+                }  
             </div>
         </div>
     
@@ -261,10 +252,9 @@ async function getFollowDetails({channelId}){
     return null;
 }
 
-async function followAction ({ action, channelId }){
+async function followAction ({ channelId }){
     try{
         const data = {
-            "action" : action,
             "channelId" : channelId
         }
         console.log(data)

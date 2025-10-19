@@ -2,7 +2,7 @@ package com.project.videoStreaming.Followers.Entity;
 
 import jakarta.persistence.Id;
 
-import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.UUID;
 
 import com.project.videoStreaming.Followers.DTO.followAction;
@@ -41,5 +41,5 @@ public class FollowersEntity {
     private followAction action;
 
     @Column(name = "followed_at", insertable = false, updatable = false)
-    private LocalDate followedAt;
+    private LocalDateTime followedAt;
 }

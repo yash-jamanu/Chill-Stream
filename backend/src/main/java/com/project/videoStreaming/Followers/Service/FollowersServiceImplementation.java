@@ -1,5 +1,6 @@
 package com.project.videoStreaming.Followers.Service;
 
+import java.time.LocalDateTime;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -22,6 +23,7 @@ public class FollowersServiceImplementation implements FollowerService {
     @Autowired
     UserServiceImplementation userImp;
 
+
     @Override
     public Follower getfollowStatus (UUID followersId, UUID channelId){
         Optional <FollowersEntity> getAction = followerRepository.findTopByFollowersIdAndChannelIdOrderByFollowedAtDesc(followersId, channelId);
@@ -41,26 +43,21 @@ public class FollowersServiceImplementation implements FollowerService {
         try{
             Optional <FollowersEntity> getFollower = followerRepository.findTopByFollowersIdAndChannelIdOrderByFollowedAtDesc(follower.getFollowersId(), follower.getChannelId());
             if(!getFollower.isPresent()){
+                // New follower is added
                 FollowersEntity entity = new FollowersEntity();
-                BeanUtils.copyProperties(getFollower, entity);
+                entity.setFollowersId(follower.getFollowersId());
+                entity.setChannelId(follower.getChannelId());
+                entity.setAction(followAction.FOLLOW);
+                entity.setFollowedAt(LocalDateTime.now());
                 followerRepository.save(entity);
 
                 userImp.incrementSubsCount(follower.getChannelId());
 
-            }else if (getFollower.isPresent()){
-                FollowersEntity entity = getFollower.get();
-                if(entity.getAction() == followAction.FOLLOW && follower.getAction() == followAction.UNFOLLOW){
-                    entity.setAction(followAction.UNFOLLOW);
-                    followerRepository.save(entity);
-
-                    userImp.decrementSubsCount(follower.getChannelId());
-                    
-                }else if(entity.getAction() == followAction.UNFOLLOW && follower.getAction() == followAction.FOLLOW){
-                    entity.setAction(followAction.FOLLOW);
-                    followerRepository.save(entity);
-
-                    userImp.incrementSubsCount(follower.getChannelId());
-                }
+            }else{
+                // If follower already exists and is followed to the channel it should unfollow 
+                // or the entry should be deleted 
+                followerRepository.deleteByChannelIdAndFollowersId(follower.getChannelId(), follower.getFollowersId());
+                userImp.decrementSubsCount(follower.getChannelId());  
             }
 
         }catch (Exception e) {
