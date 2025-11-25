@@ -1,8 +1,5 @@
 import React, { useState, useRef} from 'react';
 import './UploadVideo.css';
-import { app, storage } from '../firebaseConfig'
-import { ref, getDownloadURL, uploadBytesResumable } from 'firebase/storage'
-
 
 export function Thumbnail({ onBack, close, onFinish}) {
   const [file, setFile] = useState(null);
@@ -15,28 +12,23 @@ export function Thumbnail({ onBack, close, onFinish}) {
       document.getElementById("upload-file").style.display="inline"
   }
 
-  const uploadThumb = async (e) => {
+  const handleFileUpload = async (e) => {
     e.preventDefault();
-    setIsProcessing(true)
+    if(fileStatus == true){
+      setIsProcessing(true)
+      const path = await storeThumbnail({thumbnail:file});
+      onFinish(path)
+    }else{
+      console.log("failure happened")
+    }
+  }
 
-    const storageRef = ref(storage, `thumbnails/${Date.now()}-${file.name}`);
-    const uploadTask = uploadBytesResumable(storageRef, file);
-
-    uploadTask.on('state_changed', null, 
-      console.log("thumbnail Uploading"),
-      async () => {
-        const downloadURL = await getDownloadURL(uploadTask.snapshot.ref);
-        alert('Thumbnail uploaded!');
-        onFinish(downloadURL);
-      }
-    );
-  };
 
  return (
     <div className="video-block">
       {isProcessing && (
         <div className="processing-video">
-          <p className='text-2xl font-bold'>Wait until video is Uploading...</p>
+          <p className='text-2xl font-bold'>Wait until Thumbnail is Uploading...</p>
         </div>
       )}
 
@@ -50,7 +42,7 @@ export function Thumbnail({ onBack, close, onFinish}) {
         <span className="material-symbols-outlined upload-icon">upload</span> 
       </div>
 
-      <form onSubmit={uploadThumb} className='uploadFile-form'>
+      <form onSubmit={handleFileUpload} className='uploadFile-form'>
         <button type="button" 
           onClick={() => fileInputRef.current.click()}
           id='select-file'
@@ -75,4 +67,26 @@ export function Thumbnail({ onBack, close, onFinish}) {
       </form>
     </div>
    );
+}
+
+async function storeThumbnail({thumbnail}){
+  const formData = new FormData();
+  formData.append("file", thumbnail)
+  try{
+    const res = await fetch("http://localhost:8080/video/file/thumbnail", {
+      method:"POST",
+      headers :{
+        "Authorization" : `Bearer ${localStorage.getItem("jwt")}`
+      },
+      body: formData
+    }
+    )
+
+    if(res.ok){
+      const data = await res.text()
+      return data;
+    }
+  }catch(error){
+    console.erro(error)
+  }
 }

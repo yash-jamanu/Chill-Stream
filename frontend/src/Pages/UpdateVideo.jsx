@@ -1,7 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { useLocation , useNavigate} from 'react-router-dom';
-import { ref, getDownloadURL, uploadBytesResumable, connectStorageEmulator } from 'firebase/storage';
-import { storage } from '../firebaseConfig';
 
 function UpdateThumbnail ({oldThumbnail, setThumbnail}) {
     const [isProcessing, setIsProcessing] = useState(false);

@@ -1,7 +1,5 @@
 import React, { useState, useRef } from "react";
 import './UploadVideo.css';
-import { app, storage } from '../firebaseConfig'
-import { ref, getDownloadURL, uploadBytesResumable } from 'firebase/storage'
 
 
 export function Video({ onNext , close, setVideoURL}) {
@@ -15,23 +13,18 @@ export function Video({ onNext , close, setVideoURL}) {
       document.getElementById("upload-file").style.display="inline"
     }
 
-    const uploadVideo = async (e) => {
+    const handleFileUpload = async (e) => {
       e.preventDefault();
-      setIsProcessing(true);
+      if(fileStatus == true){
+        setIsProcessing(true)
+        const path = await storevideo({video:file});
+        setVideoURL(path)
+        onNext()
+      }else{
+        console.log("failure happened")
+      }
+    }
 
-      const storageRef = ref(storage, `videos/${Date.now()}-${file.name}`);
-      const uploadTask = uploadBytesResumable(storageRef, file);
-
-      uploadTask.on('state_changed', null,
-        console.log("video Uploading"),
-        async () => {
-        const downloadURL = await getDownloadURL(uploadTask.snapshot.ref);
-        setVideoURL(downloadURL);
-        alert('Video uploaded!');
-        console.log(downloadURL)
-        onNext()  
-      });
-    };
 
   return (
     <div className="video-block">
@@ -48,7 +41,7 @@ export function Video({ onNext , close, setVideoURL}) {
       <div className="icon-box">
         <span className="material-symbols-outlined upload-icon">upload</span> 
       </div>
-      <form onSubmit={uploadVideo} className="uploadFile-form">
+      <form onSubmit={handleFileUpload} className="uploadFile-form">
         <div id="select-file">
           <button type="button"
             className="videoUpload-btn" 
@@ -68,6 +61,7 @@ export function Video({ onNext , close, setVideoURL}) {
           setFileStatus(true)
          }} 
         />
+
         <div>
           <button className="videoUpload-btn" 
             type="submit" 
@@ -77,7 +71,33 @@ export function Video({ onNext , close, setVideoURL}) {
             Upload
           </button>
         </div>
+        
       </form>
+      
     </div>
   );
+}
+
+
+async function storevideo({video}){
+  const formData = new FormData();
+  formData.append("file", video)
+  try{
+    const res = await fetch("http://localhost:8080/video/file/video", {
+      method:"POST",
+      headers :{
+        "Authorization" : `Bearer ${localStorage.getItem("jwt")}`
+      },
+      body: formData
+    }
+    )
+
+    if(res.ok){
+      const data = res.text()
+      console.log(data)
+      return data;
+    }
+  }catch(error){
+    console.error(error)
+  }
 }

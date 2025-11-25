@@ -2,6 +2,7 @@ package com.project.videoStreaming.Users.Controller;
 
 import org.springframework.web.bind.annotation.RestController;
 
+import com.project.videoStreaming.SecurityConfig.AuthService;
 import com.project.videoStreaming.SecurityConfig.JwtUtil;
 import com.project.videoStreaming.SecurityConfig.config;
 import com.project.videoStreaming.Users.DTO.User;
@@ -15,12 +16,10 @@ import lombok.extern.slf4j.Slf4j;
 import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.security.authentication.AuthenticationManager;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -41,6 +40,9 @@ import org.springframework.web.bind.annotation.GetMapping;
 @RequestMapping("/api/auth")
 @Slf4j
 public class AuthUser {
+
+    @Autowired
+    AuthService authService;
 
     @Autowired
     UserServiceImplementation Service;
@@ -74,21 +76,12 @@ public class AuthUser {
     
 
     @PostMapping("/login")
-    public ResponseEntity<String> LoginUser(@RequestBody User request, HttpServletRequest req) {
-        try{
-            authenticationManager
-                .authenticate(
-                    new UsernamePasswordAuthenticationToken(request.getEmail(), request.getPassword())
-                );
-            UserDetails  userDetails = userDetailsService.loadUserByUsername(request.getEmail()); 
+    public ResponseEntity<String> LoginUser(@RequestBody User request) {
 
-            String jwt = jwtUtil.generateToken(userDetails.getUsername());
+        UserDetails userDetails = authService.authenticate(request.getEmail(), request.getPassword());
 
-            return new ResponseEntity<>(jwt, HttpStatus.OK);
-        }catch(Exception e){
-            log.error("Exception occured while createAuthenticationToken", e);
-            return new ResponseEntity<>("Incorrect username password", HttpStatus.BAD_REQUEST);
-        }
+        return ResponseEntity.ok().body(jwtUtil.generateToken(userDetails));
+
     }
     
     @PostMapping("/logout")

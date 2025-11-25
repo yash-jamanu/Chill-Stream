@@ -8,7 +8,7 @@ function VideoPlayer  ({filepath})  {
   return (
     <div className='video-player-block'>
         <video className='video-player' controls>
-            <source src= {filepath} type="video/mp4"/>
+            <source src= {`http://localhost:8080/video/videofile/${filepath}`} type="video/mp4"/>
         </video>
     </div>
   )

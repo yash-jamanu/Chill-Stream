@@ -44,6 +44,7 @@ public class FollowersServiceImplementation implements FollowerService {
             Optional <FollowersEntity> getFollower = followerRepository.findTopByFollowersIdAndChannelIdOrderByFollowedAtDesc(follower.getFollowersId(), follower.getChannelId());
             if(!getFollower.isPresent()){
                 // New follower is added
+                userImp.incrementSubsCount(follower.getChannelId());
                 FollowersEntity entity = new FollowersEntity();
                 entity.setFollowersId(follower.getFollowersId());
                 entity.setChannelId(follower.getChannelId());
@@ -51,13 +52,14 @@ public class FollowersServiceImplementation implements FollowerService {
                 entity.setFollowedAt(LocalDateTime.now());
                 followerRepository.save(entity);
 
-                userImp.incrementSubsCount(follower.getChannelId());
+                
 
             }else{
                 // If follower already exists and is followed to the channel it should unfollow 
-                // or the entry should be deleted 
+                // or the entry should be deleted
+                userImp.decrementSubsCount(follower.getChannelId());   
                 followerRepository.deleteByChannelIdAndFollowersId(follower.getChannelId(), follower.getFollowersId());
-                userImp.decrementSubsCount(follower.getChannelId());  
+                
             }
 
         }catch (Exception e) {

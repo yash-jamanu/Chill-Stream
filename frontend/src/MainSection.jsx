@@ -3,6 +3,7 @@ import './mainSection.css'
 import { useNavigate } from 'react-router-dom'
 import { VideoDetails } from './Pages/videoDetails';
 
+
 async function getData(text, type, value){
     let data = type;
 
@@ -88,7 +89,7 @@ function CardContainer({video, onClick}){
 
     return(
     <div className="card" onClick={onClick}>
-			<img src={video.thumbnail} alt="picture" className='card-img'/>
+			<img src={`http://localhost:8080/video/thumbnail/${video.thumbnail}`} alt="picture" className='card-img'/>
 		  <div className="card-details">
 			  <span className="card-category"># {video.category}</span>
             

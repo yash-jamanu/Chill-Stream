@@ -1,10 +1,8 @@
 import React, {useEffect, useState } from 'react'
 import { useRef } from 'react';
 import profile from '../assets/profile.png'
-import { app, storage } from '../firebaseConfig'
 import { useNavigate, useLocation } from 'react-router-dom';
 import './EditProfile.css'
-import { ref, getDownloadURL, uploadBytesResumable } from 'firebase/storage'
 
 function EditProfilePic ({oldProfilePic, setProfilePic}){
 
@@ -12,33 +10,6 @@ function EditProfilePic ({oldProfilePic, setProfilePic}){
     const [file, setFile] = useState(null);
     const [fileStatus, setFileStatus] = useState(false)
     const [isProcessing, setIsProcessing] = useState(false);
-
-    useEffect(() => {
-      if (fileStatus && file) {
-        uploadProfile();
-      }
-    }, [fileStatus, file]);
-
-    const uploadProfile = async () => {
-        setIsProcessing(true);
-
-        const storageRef = ref(storage, `profile/${Date.now()}-${file.name}`);
-        const uploadTask = uploadBytesResumable(storageRef, file);
-
-        uploadTask.on(
-            "state_changed",
-            null,
-            (error) => console.error("Upload error:", error),
-            async () => {
-              const downloadURL = await getDownloadURL(uploadTask.snapshot.ref);
-              setProfilePic(downloadURL);
-              alert("Profile uploaded!");
-              console.log(downloadURL);
-              setIsProcessing(false);
-            }
-        );
-    };
-
 
     return(
         <div className='image-block'>

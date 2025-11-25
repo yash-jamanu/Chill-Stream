@@ -6,8 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
-import org.springframework.security.authentication.ProviderManager;
-import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
+import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.http.SessionCreationPolicy;
@@ -19,7 +18,7 @@ import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 import com.project.videoStreaming.Filter.JwtFilter;
-import com.project.videoStreaming.Users.Service.CustomUserLogin;
+import com.project.videoStreaming.Users.Service.userDetailsService;
 
 
 @Configuration
@@ -28,11 +27,12 @@ public class config {
 
 
     @Autowired
-    CustomUserLogin customUserLogin;
-
-    @Autowired
-    JwtFilter jwtFilter;
-
+    userDetailsService UserDetailsService;
+    
+    @Bean
+    public JwtFilter jwtFilter() {
+        return new JwtFilter();
+    }
 
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity httpSecurity) throws Exception{
@@ -42,13 +42,13 @@ public class config {
                         .cors(cors -> cors.configurationSource(corsConfigurationSource()))
                         .authorizeHttpRequests(auth -> auth
                                 .requestMatchers("/api/auth/**").permitAll()
-                                .requestMatchers("/video/user/*", "/video/random-videos", "/video/category/*").permitAll()
+                                .requestMatchers("/video/user/*", "/video/random-videos", "/video/category/*", "/video/videofile/*", "/video/thumbnail/*").permitAll()
                                 .requestMatchers("/user/channel/*").permitAll()
                                 .requestMatchers("/comments/Video/*").permitAll()
                                 .requestMatchers("/api/auth/status", "/search").permitAll()
                                 .requestMatchers("/csrf/token").permitAll()
                                 .anyRequest().authenticated())
-                        .addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class)
+                        .addFilterBefore(jwtFilter(), UsernamePasswordAuthenticationFilter.class)
                         .sessionManagement(session -> session
                                 .sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                         .logout(logout -> logout.logoutSuccessUrl("/login").permitAll())
@@ -61,11 +61,8 @@ public class config {
     }
 
     @Bean
-    public AuthenticationManager authenticationManager() throws Exception {
-        DaoAuthenticationProvider provider = new DaoAuthenticationProvider();
-        provider.setUserDetailsService(customUserLogin);
-        provider.setPasswordEncoder(passwordEncoder());
-        return new ProviderManager(provider);
+    public AuthenticationManager authenticationManager(AuthenticationConfiguration configuration) throws Exception {
+        return configuration.getAuthenticationManager();
     }
     
     @Bean

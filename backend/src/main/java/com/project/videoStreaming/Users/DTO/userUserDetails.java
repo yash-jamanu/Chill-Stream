@@ -2,42 +2,33 @@ package com.project.videoStreaming.Users.DTO;
 
 import java.util.Collection;
 import java.util.List;
-
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
-import org.springframework.security.crypto.password.PasswordEncoder;
 
 import com.project.videoStreaming.Users.Entity.UserEntity;
 
-public class UserDetailsIMP implements UserDetails{
+public class userUserDetails implements UserDetails{
 
-    @Autowired
-    BCryptPasswordEncoder encoder;
+    private UserEntity userEntity;
 
-    @Autowired
-    PasswordEncoder passwordEncoder;
-
-    private UserEntity user;
-
-    public  UserDetailsIMP(UserEntity user){
-        this.user = user;
+    public userUserDetails(UserEntity userEntity) {
+        this.userEntity = userEntity;
     }
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        return List.of();
+        return List.of(new SimpleGrantedAuthority("ROLE_USER"));
     }
 
     @Override
     public String getPassword() {
-        return this.user.getPassword();
+        return this.userEntity.getPassword();
     }
 
     @Override
     public String getUsername() {
-        return this.user.getEmail();
+        return this.userEntity.getEmail();
     }
     @Override
     public boolean isAccountNonExpired() { return true; }
