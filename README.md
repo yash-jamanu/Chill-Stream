@@ -8,5 +8,5 @@ If a user likes videos uploaded by a particular user. The person can follow the 
 Tech stack<br>
 Frontend : For frontend i have used <img width="20" height="20" alt="image" src="https://github.com/user-attachments/assets/70b2698e-4cc3-46af-aa39-473f08c68c16" />
  React, Tailwind css for easy styling and bootstrap for quick design.<br>
- Backend : For backend i have used java, SpringBoot web, Spring security, firebase for storing file like videos, images.<br>
+ Backend : For backend i have used java, SpringBoot web, Spring security<br>
  Database : Postgres SQl
