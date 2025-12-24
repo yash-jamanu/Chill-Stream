@@ -11,7 +11,7 @@ function VideoDetailsPage  ({VideoDetails})  {
     const { isLoggedIn } = useAuth();
     const navigate = useNavigate();
 
-    const like = VideoDetails?.likecount || 0;
+    const [like, setLike] = useState(VideoDetails?.likecount || 0);
 
     const PrintLike = () =>{
 
@@ -56,9 +56,11 @@ function VideoDetailsPage  ({VideoDetails})  {
       reaction({videoId: VideoDetails.videoId, reactionType: type});
       if (type === "LIKE") {
         if (isLiked) {
+          setLike(like - 1)
           setIsLiked(false);
         } else {
           setIsLiked(true);
+          setLike(like + 1)
           setIsDisliked(false);
         }
       } else if (type === "DISLIKE") {
@@ -83,7 +85,7 @@ function VideoDetailsPage  ({VideoDetails})  {
     },[VideoDetails])
     
 
-    const followers = channelData.subs_count || 0;
+    const [followers, setFollowers] = useState(channelData.subs_count || 0);
 
     const follower = () =>{
         let formattedFollowers;
@@ -109,7 +111,7 @@ function VideoDetailsPage  ({VideoDetails})  {
 
         const fetchUser= async ()=>{
             const data = await getFollowDetails({channelId: VideoDetails.userId})
-            if(data.action == "FOLLOW" || data.action == null){
+            if(data.action == "FOLLOW"){
                 setFollowAction(true)
             }else{
                 setFollowAction(false)
@@ -123,29 +125,32 @@ function VideoDetailsPage  ({VideoDetails})  {
             navigate("/Login")
             return;
         }
+        
         await followAction({ channelId: VideoDetails.userId });
         let data = await getFollowDetails({channelId: VideoDetails.userId})
         if(data.action == "FOLLOW"){
             setFollowAction(true)
+                setFollowers(followers + 1) 
         }else{
             setFollowAction(false)
+            if(followers > 0){setFollowers (followers - 1)} 
         }
     }
 
   return (
     <div className='details-block'>
-        <div className='save-video material-symbols-outlined'>bookmark</div>
         <h1 className='video-title'>{VideoDetails ? (VideoDetails.title) : "Title"}</h1>
         <p className='video-category'># {VideoDetails ? (VideoDetails.category) : "Category"}</p>
         <h5 className='caption'>{VideoDetails ? (VideoDetails.caption) : "Caption"}</h5>
                 
         <div className='like-dislike-container'>
             <div onClick={()=>{handleReaction("LIKE")}}>
-                <span className={`material-symbols-outlined`} >thumb_up</span>
+                <span className={`material-symbols-outlined ${isLiked ? "Fill" : ""}`}>thumb_up</span>
                 <span>{PrintLike()}</span>
             </div>
+            
             <div onClick={()=>{handleReaction("DISLIKE")}}>
-                <span className={`material-symbols-outlined`}>thumb_down</span>
+                <span className={`material-symbols-outlined ${isDisliked ? "Fill" : ""}`}>thumb_down</span>
             </div>
         </div>
                 
@@ -159,9 +164,9 @@ function VideoDetailsPage  ({VideoDetails})  {
             </div>
             <div className='text-center flex items-center'>
                {FollowAction? 
-                        <button onClick={handleFollowBtn}>unfollow</button>
+                        <button onClick={handleFollowBtn} className='px-2 py-2 bg-blue-500 text-white'>unfollow</button>
                         :
-                        <button onClick={handleFollowBtn}>follow</button>
+                        <button onClick={handleFollowBtn} className='px-2 py-2 bg-blue-500 text-white'>follow</button>
                 }  
             </div>
         </div>

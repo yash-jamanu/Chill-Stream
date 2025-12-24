@@ -34,18 +34,6 @@ export const SideBar = ({ setMainType, setValue }) => {
         <div className='flex items-center p-1.5 list general'
           onClick={() => {
             if(isLoggedIn){
-              setMainType("wishlist")
-            }else{
-              navigate('/Login')
-            }
-            }}>
-          <span className='material-symbols-outlined pr-2.5'>bookmark</span>
-          Wishlist
-        </div>  
-        
-        <div className='flex items-center p-1.5 list general'
-          onClick={() => {
-            if(isLoggedIn){
               navigate("/UploadVideo")
             }else{
               navigate('/Login')
